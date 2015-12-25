@@ -2,8 +2,8 @@ import qbs 1.0
 Product
 {
    type: "dynamiclibrary"
-   name : "upgrademgrlib"
-   targetName : "mserver"
+   name : "ummlib"
+   targetName : "umm"
    Depends { 
       name: "Qt"; 
       submodules: ["core", "network"]
