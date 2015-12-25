@@ -1,6 +1,7 @@
 import qbs 1.0
 Product
 {
+    
    type: "dynamiclibrary"
    name : "ummlib"
    targetName : "umm"
@@ -21,4 +22,22 @@ Product
       qbs.install: true
       qbs.installDir: "lib"
    }
+   
+   Group {
+      name: "global"
+      prefix: name+"/"
+      files: [
+           "global.h",
+       ]
+   }
+   
+   Group {
+      name:"network"
+      prefix: name+"/"
+      files:[
+         "multi_thread_server.cpp",
+         "multi_thread_server.h"
+      ]
+   }
+
 }

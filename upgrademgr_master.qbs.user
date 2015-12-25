@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 3.5.81, 2015-12-25T12:53:09. -->
+<!-- Written by QtCreator 3.5.81, 2015-12-25T13:18:22. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -215,7 +215,7 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName">upgrademgr_master</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName"></value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qbs.RunConfiguration:upgrademgr_master.qtc_Desktop_2f9a3510---Qbs.RC.NameSeparator---upgrademgr_master</value>
-    <value type="QString" key="Qbs.RunConfiguration.CommandLineArguments">--version</value>
+    <value type="QString" key="Qbs.RunConfiguration.CommandLineArguments">start --daemon</value>
     <value type="QString" key="Qbs.RunConfiguration.WorkingDirectory"></value>
     <value type="QString" key="Qbs.RunConfiguration.WorkingDirectory.default">/cntysoft/company/projects/cplusplus/build-upgrademgr_master-Desktop-Debug/qtc_Desktop_2f9a3510-debug/install-root/bin</value>
     <value type="uint" key="RunConfiguration.QmlDebugServerPort">3768</value>
