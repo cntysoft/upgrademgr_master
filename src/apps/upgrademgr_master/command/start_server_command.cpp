@@ -2,6 +2,8 @@
 #include <QTcpServer>
 #include <QProcess>
 #include <QDir>
+#include <QVariant>
+#include <QDebug>
 
 #include "start_server_command.h"
 #include "const.h"

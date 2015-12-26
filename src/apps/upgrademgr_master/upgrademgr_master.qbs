@@ -29,12 +29,12 @@ UpgraderApplication
       name: "command"
       prefix: name+"/"
       files:[
-           "command_repo.h",
-           "global_version_command.cpp",
-           "global_version_command.h",
-           "start_server_command.cpp",
-           "start_server_command.h",
-       ]
+         "command_repo.h",
+         "global_version_command.cpp",
+         "global_version_command.h",
+         "start_server_command.cpp",
+         "start_server_command.h",
+      ]
    }
    
    Group {
@@ -44,6 +44,14 @@ UpgraderApplication
          "common_funcs.cpp",
          "common_funcs.h",
          "default_cfg_initializer.cpp",
+      ]
+   }
+   
+   Group {
+      name: "api"
+      prefix: name+"/"
+      files:[
+         
       ]
    }
 }

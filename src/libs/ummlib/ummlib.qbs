@@ -1,7 +1,6 @@
 import qbs 1.0
 Product
 {
-    
    type: "dynamiclibrary"
    name : "ummlib"
    targetName : "umm"
@@ -27,17 +26,17 @@ Product
       name: "global"
       prefix: name+"/"
       files: [
-           "global.h",
-       ]
+         "global.h",
+      ]
    }
    
    Group {
       name:"network"
       prefix: name+"/"
       files:[
-         "multi_thread_server.cpp",
-         "multi_thread_server.h"
-      ]
+           "multi_thread_server.cpp",
+           "multi_thread_server.h",
+       ]
    }
-
+   
 }

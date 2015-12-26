@@ -19,6 +19,5 @@ Settings::CfgInitializerFnType Application::getDefaultCfgInitializerFn()
 Application::~Application()
 {}
 
-
 }//master
 }//upgrademgr
