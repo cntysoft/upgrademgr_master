@@ -8,8 +8,6 @@ UpgraderApplication
          "sql"
       ]
    }
-   Depends { name: "corelib"}
-   Depends { name: "ummlib"}
    cpp.includePaths: base.concat([
                                     ".","../../libs"
                                  ])
