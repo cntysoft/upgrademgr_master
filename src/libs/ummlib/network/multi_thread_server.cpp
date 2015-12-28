@@ -29,7 +29,6 @@ void MultiThreadServer::incomingConnection(qintptr socketDescriptor)
 void MultiThreadServer::unboxRequest()
 {
    QTcpSocket* socket = qobject_cast<QTcpSocket*>(sender());
-   QByteArray packageUint;
    char byte;
    while(!socket->atEnd()){
       socket->read(&byte, 1);
@@ -37,15 +36,15 @@ void MultiThreadServer::unboxRequest()
          char forward;
          if(socket->peek(&forward, 1) && '\n' == forward){
             //解压当前的包
-            QDataStream stream(packageUint);
+            QDataStream stream(m_packageUnitBuffer);
             ApiInvokeRequest request;
             stream >> request;
-            packageUint.clear();
-            socket->read(nullptr, 1);
+            m_packageUnitBuffer.clear();
+            socket->read(&forward, 1);
             continue;
          }
       }
-      packageUint.append(byte);
+      m_packageUnitBuffer.append(byte);
    }
 }
 

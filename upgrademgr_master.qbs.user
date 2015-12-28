@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 3.5.81, 2015-12-28T13:13:44. -->
+<!-- Written by QtCreator 3.5.81, 2015-12-28T19:12:50. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -126,7 +126,7 @@
       <value type="bool" key="Qbs.DryKeepGoing">false</value>
       <value type="bool" key="Qbs.DryRun">false</value>
       <value type="bool" key="Qbs.Install">true</value>
-      <value type="int" key="Qbs.MaxJobs">0</value>
+      <value type="int" key="Qbs.MaxJobs">4</value>
       <value type="bool" key="Qbs.ShowCommandLines">false</value>
      </valuemap>
      <value type="int" key="ProjectExplorer.BuildStepList.StepsCount">1</value>

@@ -3,7 +3,6 @@
 #include <QProcess>
 #include <QDir>
 #include <QVariant>
-#include <QDebug>
 
 #include "start_server_command.h"
 #include "const.h"
@@ -55,15 +54,14 @@ void StartServerCommand::exec()
    server->setPort(port);
    app.createPidFile();
    bool status = server->run();
-   if(!status){
-      delete server;
-      throw ErrorInfo(server->errorString());
-   }
    //防止内存泄漏,这里利用闭包复制指针
    QObject::connect(&app, &Application::aboutToQuit, [server, &app](){
       delete server;
       app.deletePidFile();
    });
+   if(!status){
+      throw ErrorInfo(server->errorString());
+   }
 }
 
 qint16 StartServerCommand::getMetaServerListenPort()

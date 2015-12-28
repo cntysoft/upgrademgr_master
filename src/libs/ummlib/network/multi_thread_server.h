@@ -2,6 +2,7 @@
 #define UPGRADEMGR_MASTER_NETWORK_MULTI_THREAD_SERVER_H
 
 #include <QMap>
+#include <QByteArray>
 
 QT_BEGIN_NAMESPACE
 class QTcpSocket;
@@ -29,6 +30,7 @@ protected:
 protected slots:
    void unboxRequest();
 protected:
+   QByteArray m_packageUnitBuffer;
    ApiProvider& m_apiProvider;
    static QMap<int, QTcpSocket*> m_connections;
 };
