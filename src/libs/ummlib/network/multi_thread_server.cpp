@@ -1,10 +1,14 @@
 #include <QTcpSocket>
+#include <QDataStream>
 #include <QDebug>
 
 #include "multi_thread_server.h"
+#include "corelib/network/rpc/invoke_meta.h"
 
 namespace ummlib{
 namespace network{
+
+using sn::corelib::network::ApiInvokeRequest;
 
 MultiThreadServer::MultiThreadServer(Application& app,QObject *parent)
    : AbstractMultiThreadServer(app, parent),
@@ -19,12 +23,30 @@ void MultiThreadServer::incomingConnection(qintptr socketDescriptor)
    QTcpSocket* socket = new QTcpSocket(this);
    socket->setSocketDescriptor(socketDescriptor);
    connect(socket, &QTcpSocket::readyRead, this, &MultiThreadServer::unboxRequest);
+   connect(socket, &QTcpSocket::disconnected, socket, &QTcpSocket::deleteLater);
 }
 
 void MultiThreadServer::unboxRequest()
 {
-   
-   qDebug() << "data";  
+   QTcpSocket* socket = qobject_cast<QTcpSocket*>(sender());
+   QByteArray packageUint;
+   char byte;
+   while(!socket->atEnd()){
+      socket->read(&byte, 1);
+      if('\r' == byte){
+         char forward;
+         if(socket->peek(&forward, 1) && '\n' == forward){
+            //解压当前的包
+            QDataStream stream(packageUint);
+            ApiInvokeRequest request;
+            stream >> request;
+            packageUint.clear();
+            socket->read(nullptr, 1);
+            continue;
+         }
+      }
+      packageUint.append(byte);
+   }
 }
 
 }//network

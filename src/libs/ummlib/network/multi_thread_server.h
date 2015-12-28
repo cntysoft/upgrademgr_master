@@ -1,6 +1,12 @@
 #ifndef UPGRADEMGR_MASTER_NETWORK_MULTI_THREAD_SERVER_H
 #define UPGRADEMGR_MASTER_NETWORK_MULTI_THREAD_SERVER_H
 
+#include <QMap>
+
+QT_BEGIN_NAMESPACE
+class QTcpSocket;
+QT_END_NAMESPACE
+
 #include "ummlib/global/global.h"
 
 #include "corelib/network/abstract_multi_thread_server.h"
@@ -11,8 +17,8 @@ namespace ummlib{
 namespace network{
 
 using sn::corelib::Application;
-using sn::network::AbstractMultiThreadServer;
-using sn::network::ApiProvider;
+using sn::corelib::network::AbstractMultiThreadServer;
+using sn::corelib::network::ApiProvider;
 
 class UM_MASTER_LIB_EXPORT MultiThreadServer : public AbstractMultiThreadServer
 {
@@ -24,6 +30,7 @@ protected slots:
    void unboxRequest();
 protected:
    ApiProvider& m_apiProvider;
+   static QMap<int, QTcpSocket*> m_connections;
 };
 
 }//network
