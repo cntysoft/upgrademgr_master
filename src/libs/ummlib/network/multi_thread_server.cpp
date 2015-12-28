@@ -4,11 +4,13 @@
 
 #include "multi_thread_server.h"
 #include "corelib/network/rpc/invoke_meta.h"
+#include "corelib/network/rpc/api_provider.h"
 
 namespace ummlib{
 namespace network{
 
 using sn::corelib::network::ApiInvokeRequest;
+using sn::corelib::network::ApiProvider;
 
 MultiThreadServer::MultiThreadServer(Application& app,QObject *parent)
    : AbstractMultiThreadServer(app, parent),
@@ -21,6 +23,8 @@ void MultiThreadServer::incomingConnection(qintptr socketDescriptor)
    //这里暂时不进行加密处理
    //暂时也不进行多线程实现
    QTcpSocket* socket = new QTcpSocket(this);
+   ApiProvider& provider = ApiProvider::instance();
+   provider.setUnderlineSocket(socket);
    socket->setSocketDescriptor(socketDescriptor);
    connect(socket, &QTcpSocket::readyRead, this, &MultiThreadServer::unboxRequest);
    connect(socket, &QTcpSocket::disconnected, socket, &QTcpSocket::deleteLater);

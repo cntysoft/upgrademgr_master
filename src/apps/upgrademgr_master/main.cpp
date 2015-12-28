@@ -11,10 +11,17 @@ using CommandRunner = upgrademgr::master::CommandRunner;
 using ErrorInfo = sn::corelib::ErrorInfo;
 using Terminal = sn::corelib::Terminal;
 using TerminalColor = sn::corelib::TerminalColor;
+//全局更新函数
+namespace upgrademgr{
+namespace master{
+void global_initializer();
+}//master
+}//upgrademgr
 
 int main(int argc, char *argv[])
 {
    try{
+      qAddPreRoutine(upgrademgr::master::global_initializer);
       CloudControllerApplication app(argc, argv);
       app.ensureImportantDir();
       CommandRunner cmdrunner(app);

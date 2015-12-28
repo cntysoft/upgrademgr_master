@@ -39,17 +39,30 @@ UpgraderApplication
       name: "utils"
       prefix: name+"/"
       files:[
-         "common_funcs.cpp",
-         "common_funcs.h",
-         "default_cfg_initializer.cpp",
-      ]
+           "common_funcs.cpp",
+           "common_funcs.h",
+           "default_cfg_initializer.cpp",
+       ]
    }
    
    Group {
       name: "api"
       prefix: name+"/"
       files:[
-         
-      ]
+           "api_repo.h",
+           "macros.h",
+           "repo/info.cpp",
+           "repo/info.h",
+       ]
+   }
+   
+   Group {
+      name: "initializers"
+      prefix: name+"/"
+      files:[
+           "../global_initializer_and_cleanup.cpp",
+           "init_api_provider.cpp",
+           "initializer_cleanup_funcs.h",
+       ]
    }
 }
