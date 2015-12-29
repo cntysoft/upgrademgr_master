@@ -3,19 +3,19 @@
 #include <QDebug>
 
 #include "multi_thread_server.h"
-#include "corelib/network/rpc/invoke_meta.h"
-#include "corelib/network/rpc/api_provider.h"
 
 namespace ummlib{
 namespace network{
-
-using sn::corelib::network::ApiInvokeRequest;
-using sn::corelib::network::ApiProvider;
 
 MultiThreadServer::MultiThreadServer(Application& app,QObject *parent)
    : AbstractMultiThreadServer(app, parent),
      m_apiProvider(ApiProvider::instance())
 {
+}
+
+ApiProvider& MultiThreadServer::getApiProvider()
+{
+   return m_apiProvider;
 }
 
 void MultiThreadServer::incomingConnection(qintptr socketDescriptor)
@@ -24,7 +24,7 @@ void MultiThreadServer::incomingConnection(qintptr socketDescriptor)
    //暂时也不进行多线程实现
    QTcpSocket* socket = new QTcpSocket(this);
    ApiProvider& provider = ApiProvider::instance();
-   provider.setUnderlineSocket(socket);
+   provider.setUnderlineSocket((int) socketDescriptor, socket);
    socket->setSocketDescriptor(socketDescriptor);
    connect(socket, &QTcpSocket::readyRead, this, &MultiThreadServer::unboxRequest);
    connect(socket, &QTcpSocket::disconnected, socket, &QTcpSocket::deleteLater);
@@ -43,6 +43,8 @@ void MultiThreadServer::unboxRequest()
             QDataStream stream(m_packageUnitBuffer);
             ApiInvokeRequest request;
             stream >> request;
+            request.setSocketNum((int)socket->socketDescriptor());
+            processRequest(request);
             m_packageUnitBuffer.clear();
             socket->read(&forward, 1);
             continue;
@@ -50,6 +52,11 @@ void MultiThreadServer::unboxRequest()
       }
       m_packageUnitBuffer.append(byte);
    }
+}
+
+void MultiThreadServer::processRequest(const ApiInvokeRequest &request)
+{
+   m_apiProvider.callApi(request);
 }
 
 }//network
