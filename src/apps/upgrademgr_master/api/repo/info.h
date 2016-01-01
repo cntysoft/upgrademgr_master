@@ -15,9 +15,10 @@ UMM_USING_API_NAMESPACES
 
 class Info : public AbstractApi
 {
+   Q_OBJECT
 public:
    Info(ApiProvider& provider);
-   ApiInvokeResponse getVersion(const ApiInvokeRequest &request, ApiProvider &provider);
+   Q_INVOKABLE ApiInvokeResponse lsSoftwareRepoDir(const ApiInvokeRequest& request);
 };
 
 }//repo

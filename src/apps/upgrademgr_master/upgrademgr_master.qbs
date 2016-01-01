@@ -49,6 +49,7 @@ UpgraderApplication
       name: "api"
       prefix: name+"/"
       files:[
+           "api_error_code.h",
            "api_repo.h",
            "macros.h",
            "repo/info.cpp",

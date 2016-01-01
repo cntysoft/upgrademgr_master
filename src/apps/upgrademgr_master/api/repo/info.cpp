@@ -11,9 +11,9 @@ Info::Info(ApiProvider &provider)
 {
 }
 
-ApiInvokeResponse Info::getVersion(const ApiInvokeRequest &request, ApiProvider &provider)
+ApiInvokeResponse Info::lsSoftwareRepoDir(const ApiInvokeRequest &request)
 {
-   return ApiInvokeResponse();
+   return ApiInvokeResponse("Repo/Info/lsSoftwareRepoDir", true);
 }
 
 }//repo
