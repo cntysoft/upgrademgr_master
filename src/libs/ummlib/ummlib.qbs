@@ -43,6 +43,7 @@ Product
       name: "global"
       prefix: name+"/"
       files: [
+           "const.h",
            "global.h",
        ]
    }
@@ -51,8 +52,17 @@ Product
       name:"network"
       prefix: name+"/"
       files:[
-           "multi_thread_server.cpp",
-           "multi_thread_server.h",
+         "multi_thread_server.cpp",
+         "multi_thread_server.h",
+      ]
+   }
+   
+   Group {
+      name: "kernel"
+      prefix: name+"/"
+      files: [
+           "stddir.cpp",
+           "stddir.h",
        ]
    }
    

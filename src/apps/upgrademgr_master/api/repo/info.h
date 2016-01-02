@@ -19,6 +19,8 @@ class Info : public AbstractApi
 public:
    Info(ApiProvider& provider);
    Q_INVOKABLE ApiInvokeResponse lsSoftwareRepoDir(const ApiInvokeRequest& request);
+protected:
+   QString m_dataDir;
 };
 
 }//repo

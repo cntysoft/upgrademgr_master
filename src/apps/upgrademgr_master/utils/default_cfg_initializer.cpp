@@ -1,6 +1,6 @@
 #include <QDir>
 
-#include "const.h"
+#include "ummlib/global/const.h"
 #include "kernel/settings.h"
 
 namespace upgrademgr{
@@ -20,6 +20,7 @@ static void init_global_cfg(Settings& settings)
    QString runtimeDir = QDir::tempPath()+QDir::separator()+"upgrademgrmaster";
    settings.setValue("runtimeDir", runtimeDir, UMM_CFG_GROUP_GLOBAL);
    settings.setValue("listenPort", UMM_LISTEN_PORT, UMM_CFG_GROUP_GLOBAL);
+   settings.setValue("baseDataDir", "/cntysoft/upgrademgr", UMM_CFG_GROUP_GLOBAL);
    settings.setValue("dbHost", "localhost");
    settings.setValue("dbUser", "cntysoft");
    settings.setValue("dbPassword", "cntysoft");
