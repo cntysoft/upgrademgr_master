@@ -9,7 +9,7 @@
 #include "corelib/kernel/application.h"
 
 namespace ummlib{
-namespace network{
+namespace kernel{
 
 using BaseStdDir = sn::corelib::StdDir;
 using sn::corelib::Application;
@@ -18,6 +18,7 @@ class UM_MASTER_LIB_EXPORT StdDir : public BaseStdDir
 {
 public:
    static QString getBaseDataDir();
+   static QString getSoftwareRepoDir();
 };
 
 }//network

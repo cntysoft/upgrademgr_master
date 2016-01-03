@@ -12,7 +12,7 @@ namespace master{
 namespace api{
 namespace repo{
 
-using ummlib::network::StdDir;
+using ummlib::kernel::StdDir;
 using sn::corelib::Filesystem;
 
 Info::Info(ApiProvider &provider)

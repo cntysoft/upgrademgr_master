@@ -16,6 +16,9 @@ void init_api_provider()
    provider.addApiToPool("Repo/Info", [](ApiProvider& provider)-> AbstractApi*{
                             return new upgrademgr::master::api::repo::Info(provider);
                          });
+   provider.addApiToPool("Common/Uploader", [](ApiProvider& provider)-> AbstractApi*{
+                            return new upgrademgr::master::api::common::Uploader(provider);
+                         });
 }
 
 }//master

@@ -4,7 +4,7 @@
 #include "corelib/kernel/settings.h"
 
 namespace ummlib{
-namespace network{
+namespace kernel{
 
 using sn::corelib::Settings;
 
@@ -16,6 +16,11 @@ QString StdDir::getBaseDataDir()
       dir = settings.getValue("baseDataDir", UMM_CFG_GROUP_GLOBAL, "/cntysoft/upgrademgr").toString();
    }
    return dir;
+}
+
+QString StdDir::getSoftwareRepoDir()
+{
+   return StdDir::getBaseDataDir()+"/"+"softwarerepo";
 }
 
 }//network
