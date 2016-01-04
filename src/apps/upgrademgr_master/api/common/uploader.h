@@ -3,6 +3,7 @@
 
 #include <QMap>
 #include <QString>
+#include <QFile>
 
 #include "api/macros.h"
 #include "corelib/network/rpc/abstract_api.h"
@@ -30,15 +31,20 @@ class Uploader : public AbstractApi
    {
       QString baseDir;
       QString filename;
+      QString md5;
       int total = 0;
       int uploaded = 0;
       int step = UPLOAD_STEP_PREPARE;
+      QFile *targetFile = nullptr;
    };
 public:
    Uploader(ApiProvider& provider);
+   virtual ~Uploader();
    Q_INVOKABLE ApiInvokeResponse init(const ApiInvokeRequest &request);
+   Q_INVOKABLE ApiInvokeResponse receiveData(const ApiInvokeRequest &request);
 protected:
    UploadContext& getContextByRequest(const ApiInvokeRequest &request);
+   Uploader& removeContextByRequestSocketId(int sid);
 protected:
    QMap<int, UploadContext> m_context;
 };
