@@ -1,6 +1,6 @@
 #include <QList>
 #include <QVariant>
-
+#include <QThread>
 #include "ummlib/kernel/stddir.h"
 #include "uploader.h"
 #include "corelib/kernel/errorinfo.h"
@@ -35,7 +35,7 @@ ApiInvokeResponse Uploader::init(const ApiInvokeRequest &request)
       QFileInfo fileInfo(filename);
       filename = baseDir+"/"+fileInfo.fileName();
       QString md5 = args.at(2).toString();
-      int total = args.at(3).toInt();
+      quint64 total = args.at(3).toInt();
       UploadContext context;
       context.baseDir = baseDir;
       context.filename = filename;
@@ -45,9 +45,11 @@ ApiInvokeResponse Uploader::init(const ApiInvokeRequest &request)
       context.step = UPLOAD_STEP_PREPARE;
       QFile *file = new QFile(filename);
       file->open(QIODevice::Truncate | QIODevice::WriteOnly);
+      context.targetFile = file;
       m_context[request.getSocketNum()] = context;
       ApiInvokeResponse response("Common/Uploader/init", true);
       response.setSerial(request.getSerial());
+      
       return response;
    }catch(ErrorInfo errorInfo){
       ApiInvokeResponse response("Common/Uploader/init", false);
@@ -65,7 +67,16 @@ ApiInvokeResponse Uploader::receiveData(const ApiInvokeRequest &request)
       if(context.step != UPLOAD_STEP_PREPARE){
          throw ErrorInfo("上下文状态错误");  
       }
-      qDebug() << 1;
+      QThread::msleep(1000);
+      qDebug() << 2;
+      request.getExtraData();
+      QByteArray unit = QByteArray::fromBase64(request.getExtraData());
+      context.targetFile->write(unit);
+      context.uploaded += unit.size();
+      if(context.total == context.uploaded){
+         context.targetFile->close();
+         context.step = UPLOAD_STEP_PROCESS;
+      }
       return ApiInvokeResponse("Common/Uploader/receiveData", true);
    }catch(ErrorInfo errorInfo){
       ApiInvokeResponse response("Common/Uploader/receiveData", false);

@@ -32,8 +32,8 @@ class Uploader : public AbstractApi
       QString baseDir;
       QString filename;
       QString md5;
-      int total = 0;
-      int uploaded = 0;
+      quint64 total = 0;
+      quint64 uploaded = 0;
       int step = UPLOAD_STEP_PREPARE;
       QFile *targetFile = nullptr;
    };

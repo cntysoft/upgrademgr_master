@@ -20,7 +20,6 @@ ApiProvider& MultiThreadServer::getApiProvider()
 
 void MultiThreadServer::incomingConnection(qintptr socketDescriptor)
 {
-   qDebug() << "connect";
    qDebug() << socketDescriptor;
    //这里暂时不进行加密处理
    //暂时也不进行多线程实现
