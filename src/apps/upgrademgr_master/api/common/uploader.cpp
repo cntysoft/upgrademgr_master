@@ -34,15 +34,14 @@ ApiInvokeResponse Uploader::init(const ApiInvokeRequest &request)
       QString filename = args.at(1).toString();
       QFileInfo fileInfo(filename);
       filename = baseDir+"/"+fileInfo.fileName();
-      QString md5 = args.at(2).toString();
-      quint64 total = args.at(3).toInt();
       UploadContext context;
       context.baseDir = baseDir;
       context.filename = filename;
-      context.md5 = md5;
-      context.total = total;
+      context.md5 = args.at(2).toString();
+      context.total = args.at(3).toInt();
       context.uploaded = 0;
       context.step = UPLOAD_STEP_PREPARE;
+      context.cycleSize = args.at(4).toInt();
       QFile *file = new QFile(filename);
       file->open(QIODevice::Truncate | QIODevice::WriteOnly);
       context.targetFile = file;
@@ -67,17 +66,22 @@ ApiInvokeResponse Uploader::receiveData(const ApiInvokeRequest &request)
       if(context.step != UPLOAD_STEP_PREPARE){
          throw ErrorInfo("上下文状态错误");  
       }
-      QThread::msleep(1000);
-      qDebug() << 2;
+      ApiInvokeResponse response("Common/Uploader/receiveData", true);
+      response.setSerial(request.getSerial());
       request.getExtraData();
       QByteArray unit = QByteArray::fromBase64(request.getExtraData());
       context.targetFile->write(unit);
       context.uploaded += unit.size();
+      context.currentCycle++;
+      if(0 == (context.currentCycle % context.cycleSize)){
+         qDebug() << "cycle";
+         response.setData({{"cycleComplete", QVariant(true)}});
+      }
       if(context.total == context.uploaded){
          context.targetFile->close();
          context.step = UPLOAD_STEP_PROCESS;
       }
-      return ApiInvokeResponse("Common/Uploader/receiveData", true);
+      return response;
    }catch(ErrorInfo errorInfo){
       ApiInvokeResponse response("Common/Uploader/receiveData", false);
       response.setError({0, errorInfo.toString()});

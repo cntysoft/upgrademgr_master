@@ -27,6 +27,7 @@ class Uploader : public AbstractApi
    const static int UPLOAD_STEP_START = 1;
    const static int UPLOAD_STEP_PROCESS = 2;
    const static int UPLOAD_STEP_FINISH = 3;
+   
    struct UploadContext
    {
       QString baseDir;
@@ -36,6 +37,8 @@ class Uploader : public AbstractApi
       quint64 uploaded = 0;
       int step = UPLOAD_STEP_PREPARE;
       QFile *targetFile = nullptr;
+      int cycleSize = 20;
+      int currentCycle = 0;
    };
 public:
    Uploader(ApiProvider& provider);
