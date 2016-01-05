@@ -26,7 +26,8 @@ class Uploader : public AbstractApi
    const static int UPLOAD_STEP_PREPARE = 0;
    const static int UPLOAD_STEP_START = 1;
    const static int UPLOAD_STEP_PROCESS = 2;
-   const static int UPLOAD_STEP_FINISH = 3;
+   const static int UPLOAD_STEP_CHECKSUM = 3;
+   const static int UPLOAD_STEP_FINISH = 4;
    
    struct UploadContext
    {
@@ -45,11 +46,13 @@ public:
    virtual ~Uploader();
    Q_INVOKABLE ApiInvokeResponse init(const ApiInvokeRequest &request);
    Q_INVOKABLE ApiInvokeResponse receiveData(const ApiInvokeRequest &request);
+   Q_INVOKABLE ApiInvokeResponse checkUploadResult(const ApiInvokeRequest &request);
 protected:
    UploadContext& getContextByRequest(const ApiInvokeRequest &request);
    Uploader& removeContextByRequestSocketId(int sid);
 protected:
    QMap<int, UploadContext> m_context;
+   quint64 m_total = 0;
 };
 
 }//common

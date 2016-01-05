@@ -1,6 +1,12 @@
 #include <QList>
 #include <QVariant>
 #include <QThread>
+#include <QFile>
+#include <QByteArray>
+#include <QCryptographicHash>
+#include <QString>
+#include <QMap>
+
 #include "ummlib/kernel/stddir.h"
 #include "uploader.h"
 #include "corelib/kernel/errorinfo.h"
@@ -48,7 +54,6 @@ ApiInvokeResponse Uploader::init(const ApiInvokeRequest &request)
       m_context[request.getSocketNum()] = context;
       ApiInvokeResponse response("Common/Uploader/init", true);
       response.setSerial(request.getSerial());
-      
       return response;
    }catch(ErrorInfo errorInfo){
       ApiInvokeResponse response("Common/Uploader/init", false);
@@ -63,29 +68,70 @@ ApiInvokeResponse Uploader::receiveData(const ApiInvokeRequest &request)
 {
    try{
       UploadContext &context = getContextByRequest(request);
-      if(context.step != UPLOAD_STEP_PREPARE){
+      if(context.step != UPLOAD_STEP_PREPARE && context.step != UPLOAD_STEP_PROCESS){
          throw ErrorInfo("上下文状态错误");  
       }
       ApiInvokeResponse response("Common/Uploader/receiveData", true);
       response.setSerial(request.getSerial());
-      request.getExtraData();
       QByteArray unit = QByteArray::fromBase64(request.getExtraData());
       context.targetFile->write(unit);
       context.uploaded += unit.size();
       context.currentCycle++;
+      QMap<QString, QVariant> data{
+         {"receivedCycleSize", QVariant(unit.size())}
+      };
       if(0 == (context.currentCycle % context.cycleSize)){
-         qDebug() << "cycle";
-         response.setData({{"cycleComplete", QVariant(true)}});
+         data.insert("cycleComplete", QVariant(true));
       }
-      if(context.total == context.uploaded){
-         context.targetFile->close();
-         context.step = UPLOAD_STEP_PROCESS;
+      if(context.uploaded == context.total){
+        data.insert("lastReceived", QVariant(true));
       }
+      context.step = UPLOAD_STEP_PROCESS;
+      response.setData(data);
       return response;
    }catch(ErrorInfo errorInfo){
       ApiInvokeResponse response("Common/Uploader/receiveData", false);
       response.setError({0, errorInfo.toString()});
       response.setSerial(request.getSerial());
+      removeContextByRequestSocketId(request.getSocketNum());
+      return response;
+   }
+}
+
+ApiInvokeResponse Uploader::checkUploadResult(const ApiInvokeRequest &request)
+{
+   UploadContext &context = getContextByRequest(request);
+   try{
+      if(context.step != UPLOAD_STEP_PROCESS){
+         throw ErrorInfo("上下文状态错误");  
+      }
+      context.step = UPLOAD_STEP_CHECKSUM;
+      ApiInvokeResponse response("Common/Uploader/checkUploadResult", true);
+      response.setSerial(request.getSerial());
+      context.targetFile->close();
+      QFile file(context.filename);
+      file.open(QIODevice::ReadOnly);
+      QByteArray fileContent;
+      while(!file.atEnd()){
+         fileContent.append(file.read(2048));
+      }
+      file.close();
+      QByteArray md5(QCryptographicHash::hash(fileContent, QCryptographicHash::Md5).toHex());
+      if(md5 != context.md5){
+         response.setStatus(false);
+         response.setError({1, "md5校验失败"});
+      }
+      context.step = UPLOAD_STEP_FINISH;
+      removeContextByRequestSocketId(request.getSocketNum());
+      return response;
+   }catch(ErrorInfo errorInfo){
+      ApiInvokeResponse response("Common/Uploader/checkUploadResult", false);
+      response.setError({0, errorInfo.toString()});
+      response.setSerial(request.getSerial());
+      QString filename = context.filename;
+      if(Filesystem::fileExist(filename)){
+         Filesystem::deleteFile(filename);
+      }
       removeContextByRequestSocketId(request.getSocketNum());
       return response;
    }
@@ -101,8 +147,9 @@ Uploader& Uploader::removeContextByRequestSocketId(int sid)
 {
    if(m_context.contains(sid)){
       UploadContext context = m_context.value(sid);
-      
-      delete context.targetFile;
+      if(nullptr != context.targetFile){
+         delete context.targetFile;
+      }
       m_context.remove(sid);
    }
    return *this;

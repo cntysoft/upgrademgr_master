@@ -38,20 +38,28 @@ void MultiThreadServer::unboxRequest()
    while(!socket->atEnd()){
       socket->read(&byte, 1);
       if('\r' == byte){
-         char forward;
-         if(socket->peek(&forward, 1) && '\n' == forward){
-            //解压当前的包
-            QDataStream stream(m_packageUnitBuffer);
-            ApiInvokeRequest request;
-            stream >> request;
-            request.setSocketNum((int)socket->socketDescriptor());
-            processRequest(request);
-            m_packageUnitBuffer.clear();
-            socket->read(&forward, 1);
-            continue;
+         if(socket->bytesAvailable() >= 2){
+            char forward1;
+            char forward2;
+            socket->read(&forward1, 1);
+            socket->read(&forward2, 1);
+            if('\n' == forward1 && '\t' == forward2){
+               //解压当前的包
+               QDataStream stream(m_packageUnitBuffer);
+               ApiInvokeRequest request;
+               stream >> request;
+               request.setSocketNum((int)socket->socketDescriptor());
+               processRequest(request);
+               m_packageUnitBuffer.clear();
+            }else{
+               m_packageUnitBuffer.append(byte);
+               m_packageUnitBuffer.append(forward1);
+               m_packageUnitBuffer.append(forward2);
+            }
          }
+      }else{
+         m_packageUnitBuffer.append(byte);
       }
-      m_packageUnitBuffer.append(byte);
    }
 }
 
