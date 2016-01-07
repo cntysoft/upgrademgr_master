@@ -2,7 +2,7 @@
 #include <QDataStream>
 #include <QBuffer>
 
-#include "info.h"
+#include "repo_info.h"
 
 #include "ummlib/kernel/stddir.h"
 #include "corelib/io/filesystem.h"

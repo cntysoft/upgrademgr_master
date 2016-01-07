@@ -53,8 +53,10 @@ UpgraderApplication
            "common/uploader.cpp",
            "common/uploader.h",
            "macros.h",
-           "repo/info.cpp",
-           "repo/info.h",
+           "repo/repo_info.cpp",
+           "repo/repo_info.h",
+           "serverstatus/server_info.cpp",
+           "serverstatus/server_info.h",
            "upgrader/upgrade_upgrademgr_master.cpp",
            "upgrader/upgrade_upgrademgr_master.h",
        ]

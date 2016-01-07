@@ -17,7 +17,7 @@ UpgradeUpgradeMgrMaster::UpgradeUpgradeMgrMaster(sn::corelib::network::ApiProvid
 {
 }
 
-ApiInvokeResponse UpgradeUpgradeMgrMaster::upgrade(const ApiInvokeRequest& request)
+ApiInvokeResponse UpgradeUpgradeMgrMaster::upgrade(const ApiInvokeRequest&)
 {
    m_apiProvider.disconnectUnderlineSockets();
    ummlib::network::MultiThreadServer *& server = ummlib::network::get_global_server();
