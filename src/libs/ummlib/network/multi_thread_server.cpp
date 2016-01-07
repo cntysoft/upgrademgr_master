@@ -7,6 +7,8 @@
 namespace ummlib{
 namespace network{
 
+static MultiThreadServer *globalServer = nullptr;
+
 MultiThreadServer::MultiThreadServer(Application& app,QObject *parent)
    : AbstractMultiThreadServer(app, parent),
      m_apiProvider(ApiProvider::instance())
@@ -63,9 +65,23 @@ void MultiThreadServer::unboxRequest()
    }
 }
 
+MultiThreadServer::~MultiThreadServer()
+{
+}
+
 void MultiThreadServer::processRequest(const ApiInvokeRequest &request)
 {
    m_apiProvider.callApi(request);
+}
+
+MultiThreadServer*& get_global_server()
+{
+   return globalServer;
+}
+
+void set_global_server(MultiThreadServer *server)
+{
+   globalServer = server;
 }
 
 }//network

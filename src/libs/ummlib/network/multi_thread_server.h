@@ -28,6 +28,7 @@ class UM_MASTER_LIB_EXPORT MultiThreadServer : public AbstractMultiThreadServer
 {
 public:
    MultiThreadServer(Application& app, QObject* parent = nullptr);
+   virtual ~MultiThreadServer();
    ApiProvider& getApiProvider();
 protected:
    virtual void incomingConnection(qintptr socketDescriptor);
@@ -39,6 +40,9 @@ protected:
    ApiProvider& m_apiProvider;
    static QMap<int, QTcpSocket*> m_connections;
 };
+
+UM_MASTER_LIB_EXPORT MultiThreadServer*& get_global_server();
+UM_MASTER_LIB_EXPORT void set_global_server(MultiThreadServer* server);
 
 }//network
 }//ummlib

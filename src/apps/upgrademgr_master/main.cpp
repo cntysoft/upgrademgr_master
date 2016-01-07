@@ -1,5 +1,7 @@
 #include <QTimer>
 
+#include <csignal>
+
 #include "corelib/io/terminal.h"
 #include "corelib/kernel/errorinfo.h"
 
@@ -15,6 +17,7 @@ using TerminalColor = sn::corelib::TerminalColor;
 namespace upgrademgr{
 namespace master{
 void global_initializer();
+void global_cleanup();
 }//master
 }//upgrademgr
 
@@ -22,8 +25,10 @@ int main(int argc, char *argv[])
 {
    try{
       qAddPreRoutine(upgrademgr::master::global_initializer);
+      qAddPostRoutine(upgrademgr::master::global_cleanup);
       CloudControllerApplication app(argc, argv);
       app.ensureImportantDir();
+      app.watchUnixSignal(SIGINT, true);
       CommandRunner cmdrunner(app);
       QTimer::singleShot(0, Qt::PreciseTimer, [&cmdrunner]{
          cmdrunner.run();

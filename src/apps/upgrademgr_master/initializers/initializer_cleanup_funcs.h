@@ -4,6 +4,7 @@ namespace upgrademgr{
 namespace master{
 
 void init_api_provider();
+void cleanup_api_provider();
 
 }//master
 }//upgrademgr

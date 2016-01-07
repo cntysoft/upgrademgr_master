@@ -48,14 +48,16 @@ UpgraderApplication
       name: "api"
       prefix: name+"/"
       files:[
-         "api_error_code.h",
-         "api_repo.h",
-         "common/uploader.cpp",
-         "common/uploader.h",
-         "macros.h",
-         "repo/info.cpp",
-         "repo/info.h",
-      ]
+           "api_error_code.h",
+           "api_repo.h",
+           "common/uploader.cpp",
+           "common/uploader.h",
+           "macros.h",
+           "repo/info.cpp",
+           "repo/info.h",
+           "upgrader/upgrade_upgrademgr_master.cpp",
+           "upgrader/upgrade_upgrademgr_master.h",
+       ]
    }
    
    Group {

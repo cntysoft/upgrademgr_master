@@ -3,6 +3,7 @@
 #include <QProcess>
 #include <QDir>
 #include <QVariant>
+#include <QDebug>
 
 #include "start_server_command.h"
 #include "utils/common_funcs.h"
@@ -50,13 +51,17 @@ void StartServerCommand::exec()
       }
    }
    MultiThreadServer* server = new MultiThreadServer(app);
+   ummlib::network::set_global_server(server);
    server->setHost(QHostAddress::Any);
    server->setPort(port);
    app.createPidFile();
    bool status = server->run();
    //防止内存泄漏,这里利用闭包复制指针
-   QObject::connect(&app, &Application::aboutToQuit, [server, &app](){
-      delete server;
+   QObject::connect(&app, &Application::aboutToQuit, [&app](){
+      MultiThreadServer*& server = ummlib::network::get_global_server();
+      if(nullptr != server){
+         delete server;
+      }
       app.deletePidFile();
    });
    if(!status){
