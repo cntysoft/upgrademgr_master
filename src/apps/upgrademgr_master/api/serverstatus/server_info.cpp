@@ -15,10 +15,9 @@ ApiInvokeResponse Info::getVersionInfo(const ApiInvokeRequest &request)
 {
    ApiInvokeResponse response("ServerStatus/Info/getVersionInfo", true);
    response.setSerial(request.getSerial());
-   response.addDataItem("version", upgrademgr::master::get_upgrademgr_master_version());
+   response.setDataItem("version", upgrademgr::master::get_upgrademgr_master_version());
    return response;
 }
-
 
 }//serverstatus
 }//api
