@@ -26,7 +26,10 @@ CommandRunner::CommandRunner(Application &app)
    addUsageText("usage: \n\n", TerminalColor::LightBlue);
    addUsageText("--version  print main system version number\n");
    addUsageText("--help     print help document\n");
-   addUsageText("start [--daemon] [--port] start upgrademgr server\n\n");
+   addUsageText("start [--daemon] [--port] start upgrademgr server\n");
+   addUsageText("webserversoftware set <name> <version> 在指定的环境列表中添加一个软件\n");
+   addUsageText("webserversoftware delete <name> 在指定的环境列表中添加一个软件\n");
+   addUsageText("webserversoftware list 获取当前环境软件库列表\n");
    initCommandPool();
    initRouteItems();
 }

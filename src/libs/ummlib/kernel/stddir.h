@@ -19,6 +19,7 @@ class UM_MASTER_LIB_EXPORT StdDir : public BaseStdDir
 public:
    static QString getBaseDataDir();
    static QString getSoftwareRepoDir();
+   static QString getMetaDir();
 };
 
 }//network

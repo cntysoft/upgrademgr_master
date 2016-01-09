@@ -20,7 +20,12 @@ QString StdDir::getBaseDataDir()
 
 QString StdDir::getSoftwareRepoDir()
 {
-   return StdDir::getBaseDataDir()+"/"+"softwarerepo";
+   return StdDir::getBaseDataDir()+"/softwarerepo";
+}
+
+QString StdDir::getMetaDir()
+{
+   return StdDir::getBaseDataDir()+"/meta";
 }
 
 }//network

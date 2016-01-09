@@ -25,7 +25,7 @@ Product
    }
    cpp.visibility: "minimal"
    cpp.cxxLanguageVersion: "c++14"
-   cpp.includePaths:[".","../"]
+   cpp.includePaths:[".","../ummlib/", "../"]
    Export {
       Depends { name: "cpp" }
       Depends { name: "Qt"; submodules: ["core"] }
@@ -42,9 +42,9 @@ Product
       name: "global"
       prefix: name+"/"
       files: [
-           "const.h",
-           "global.h",
-       ]
+         "const.h",
+         "global.h",
+      ]
    }
    
    Group {
@@ -60,9 +60,17 @@ Product
       name: "kernel"
       prefix: name+"/"
       files: [
-           "stddir.cpp",
-           "stddir.h",
-       ]
+         "stddir.cpp",
+         "stddir.h",
+      ]
    }
    
+   Group {
+      name:"meta"
+      prefix:name+"/"
+      files: [
+           "webserver/webserver_env_list.cpp",
+           "webserver/webserver_env_list.h",
+       ]
+   }
 }
