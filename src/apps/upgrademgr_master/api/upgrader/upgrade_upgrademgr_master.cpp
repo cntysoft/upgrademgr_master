@@ -34,8 +34,8 @@ UpgradeUpgradeMgrMaster::UpgradeUpgradeMgrMaster(sn::corelib::network::ApiProvid
 
 ApiInvokeResponse UpgradeUpgradeMgrMaster::upgrade(const ApiInvokeRequest &request)
 {
-   QList<QVariant> args = request.getArgs();
-   QString targetVersion = args.takeLast().toString();
+   QList<QVariant> requestParams = request.getArgs();
+   QString targetVersion = requestParams.takeLast().toString();
    ApiInvokeResponse response("Upgrader/UpgradeUpgrademgrMaster/upgrade", true);
    response.setSerial(request.getSerial());
    response.setDataItem("msg", "开始准备更新");
@@ -56,18 +56,26 @@ ApiInvokeResponse UpgradeUpgradeMgrMaster::upgrade(const ApiInvokeRequest &reque
    }
    response.setDataItem("msg", "开始安装RPM包");
    writeInterResponse(request.getSocketNum(), response);
-   installRpmPackage(filename);
+   QString errorString;
+   int status = installRpmPackage(filename, errorString);
+   if(!status){
+      response.setStatus(false);
+      response.setError({1, errorString});
+      return response;
+   }
    response.setDataItem("msg", "更新完成");
-//   m_apiProvider.disconnectUnderlineSockets();
-//   ummlib::network::MultiThreadServer *& server = ummlib::network::get_global_server();
-//   server->close();
-//   QStringList args = Application::instance()->arguments();
-//   args.takeFirst();
-//   args.removeAll("--daemon");
-//   if(QProcess::startDetached(Application::applicationFilePath(), args, QDir::currentPath())){
-//      Application::instance()->exit(EXIT_SUCCESS);
-//   }
-//   Application::instance()->exit(1);
+   m_apiProvider.disconnectUnderlineSockets();
+   ummlib::network::MultiThreadServer *& server = ummlib::network::get_global_server();
+   server->close();
+   QStringList args = Application::instance()->arguments();
+   args.takeFirst();
+   args.removeAll("--daemon");
+   qDebug() << Application::applicationFilePath();
+   qDebug() << args;
+   if(QProcess::startDetached("/usr/local/bin/upgrademgr_master", args, QDir::currentPath())){
+      Application::instance()->exit(EXIT_SUCCESS);
+   }
+   Application::instance()->exit(1);
    return response;
 }
 
@@ -89,7 +97,7 @@ int UpgradeUpgradeMgrMaster::versionCompare(const QString &version1, const QStri
    return 0;
 }
 
-bool UpgradeUpgradeMgrMaster::installRpmPackage(const QString &filename)
+bool UpgradeUpgradeMgrMaster::installRpmPackage(const QString &filename, QString &errorString)
 {
    QProcess process;
    QStringList args;
@@ -97,6 +105,8 @@ bool UpgradeUpgradeMgrMaster::installRpmPackage(const QString &filename)
    process.start("rpm", args);
    process.waitForFinished();
    if(0 != process.exitCode()){
+      errorString = process.readAllStandardError();
+      errorString.remove('\n');
       return false;
    }
    return true;

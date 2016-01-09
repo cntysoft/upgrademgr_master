@@ -24,7 +24,7 @@ public:
    Q_INVOKABLE ApiInvokeResponse upgrade(const ApiInvokeRequest& request);
 protected:
    int versionCompare(const QString &version1, const QString &version2);
-   bool installRpmPackage(const QString &filename);
+   bool installRpmPackage(const QString &filename, QString &errorString);
 protected:
    const QString m_softwareRepoDir;
 };
