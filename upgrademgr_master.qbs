@@ -3,6 +3,7 @@ Project
 {
    minimumQbsVersion: "1.4.2"
    qbsSearchPaths:["qbs-resources"]
+   property bool releaseBuild : false
    property bool enableRPath: true
    property string libDirName: "lib"
    property string appInstallDir : "bin"

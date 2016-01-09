@@ -70,9 +70,7 @@ ApiInvokeResponse UpgradeUpgradeMgrMaster::upgrade(const ApiInvokeRequest &reque
    QStringList args = Application::instance()->arguments();
    args.takeFirst();
    args.removeAll("--daemon");
-   qDebug() << Application::applicationFilePath();
-   qDebug() << args;
-   if(QProcess::startDetached("/usr/local/bin/upgrademgr_master", args, QDir::currentPath())){
+   if(QProcess::startDetached(upgrademgr::master::get_application_filepath(), args, QDir::currentPath())){
       Application::instance()->exit(EXIT_SUCCESS);
    }
    Application::instance()->exit(1);

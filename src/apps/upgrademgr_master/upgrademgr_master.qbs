@@ -11,16 +11,24 @@ UpgraderApplication
    cpp.includePaths: base.concat([
                                     ".","../../libs"
                                  ])
-   cpp.defines: base.concat([
-                               'UPGRADEMGR_MASTER_VERSION="' + project.upgrademgrMasterversion + '"'
-                            ])
+   cpp.defines: {
+      var defines = [];
+      defines.concat(base);
+      defines.concat([
+                        'UPGRADEMGR_MASTER_VERSION="' + project.upgrademgrMasterversion + '"'
+                     ]);
+      if(!project.releaseBuild){
+         defines.push("UPGRADEMGR_MASTER_DEBUG_BUILD")
+      }
+      return defines;
+   }
    files: [
-        "application.cpp",
-        "application.h",
-        "command_runner.cpp",
-        "command_runner.h",
-        "main.cpp",
-    ]
+      "application.cpp",
+      "application.h",
+      "command_runner.cpp",
+      "command_runner.h",
+      "main.cpp",
+   ]
    
    Group {
       name: "command"
@@ -48,18 +56,18 @@ UpgraderApplication
       name: "api"
       prefix: name+"/"
       files:[
-           "api_error_code.h",
-           "api_repo.h",
-           "common/uploader.cpp",
-           "common/uploader.h",
-           "macros.h",
-           "repo/repo_info.cpp",
-           "repo/repo_info.h",
-           "serverstatus/server_info.cpp",
-           "serverstatus/server_info.h",
-           "upgrader/upgrade_upgrademgr_master.cpp",
-           "upgrader/upgrade_upgrademgr_master.h",
-       ]
+         "api_error_code.h",
+         "api_repo.h",
+         "common/uploader.cpp",
+         "common/uploader.h",
+         "macros.h",
+         "repo/repo_info.cpp",
+         "repo/repo_info.h",
+         "serverstatus/server_info.cpp",
+         "serverstatus/server_info.h",
+         "upgrader/upgrade_upgrademgr_master.cpp",
+         "upgrader/upgrade_upgrademgr_master.h",
+      ]
    }
    
    Group {
