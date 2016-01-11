@@ -32,10 +32,13 @@ UpgraderApplication
       prefix: name+"/"
       files:[
            "command_repo.h",
+           "global_help_command.cpp",
+           "global_help_command.h",
            "global_version_command.cpp",
            "global_version_command.h",
            "start_server_command.cpp",
            "start_server_command.h",
+           "webserver_env_software_comannd.cpp",
            "webserver_env_software_comannd.h",
        ]
    }

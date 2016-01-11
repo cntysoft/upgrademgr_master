@@ -1,5 +1,9 @@
-#ifndef UPGRADEMGR_MASTER_COMMAND_WEBSERVER_ENV_SOFTWARE_COMANND
-#define UPGRADEMGR_MASTER_COMMAND_WEBSERVER_ENV_SOFTWARE_COMANND
+#ifndef UPGRADEMGR_MASTER_COMMAND_WEBSERVER_ENV_SOFTWARE_COMANND_H
+#define UPGRADEMGR_MASTER_COMMAND_WEBSERVER_ENV_SOFTWARE_COMANND_H
+
+#include <QFile>
+#include <QJsonDocument>
+#include <QString>
 
 #include "corelib/command/abstract_command.h"
 
@@ -11,26 +15,38 @@ using sn::corelib::AbstractCommand;
 using sn::corelib::AbstractCommandRunner;
 using sn::corelib::CommandMeta;
 
-class SetWebServerSoftwareItem : public AbstractCommand
+class AbstractWebServerSoftwareCommand : public AbstractCommand
 {
 public:
-   AddWebServerSoftwareItem(AbstractCommandRunner& runner, const CommandMeta& invokeMeta);
+   AbstractWebServerSoftwareCommand(AbstractCommandRunner& runner, const CommandMeta& invokeMeta, const QString &metaFilename);
+protected:
+   void loadToCached();
+   void writeBackToFile();
+protected:
+   QJsonDocument m_repo;
+   QFile m_metaFile;
+};
+
+class SetWebServerSoftwareItemCommand : public AbstractWebServerSoftwareCommand
+{
+public:
+   SetWebServerSoftwareItemCommand(AbstractCommandRunner& runner, const CommandMeta& invokeMeta);
 public:
    virtual void exec();
 };
 
-class DeleteWebServerSoftwareItem : public AbstractCommand
+class DeleteWebServerSoftwareItemCommand : public AbstractWebServerSoftwareCommand
 {
 public:
-   DeleteWebServerSoftwareItem(AbstractCommandRunner& runner, const CommandMeta& invokeMeta);
+   DeleteWebServerSoftwareItemCommand(AbstractCommandRunner& runner, const CommandMeta& invokeMeta);
 public:
    virtual void exec();
 };
 
-class ListWebServerSoftwareItem : public AbstractCommand
+class ListWebServerSoftwareItemCommand : public AbstractWebServerSoftwareCommand
 {
 public:
-   ListWebServerSoftwareItem(AbstractCommandRunner& runner, const CommandMeta& invokeMeta);
+   ListWebServerSoftwareItemCommand(AbstractCommandRunner& runner, const CommandMeta& invokeMeta);
 public:
    virtual void exec();
 };
@@ -39,5 +55,5 @@ public:
 }//master
 }//upgrademgr
 
-#endif // UPGRADEMGR_MASTER_COMMAND_WEBSERVER_ENV_SOFTWARE_COMANND
+#endif // UPGRADEMGR_MASTER_COMMAND_WEBSERVER_ENV_SOFTWARE_COMANND_H
 
