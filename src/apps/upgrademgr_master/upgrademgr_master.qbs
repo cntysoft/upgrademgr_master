@@ -5,7 +5,8 @@ UpgraderApplication
    Depends { 
       name: "Qt"; 
       submodules: [
-         "sql"
+         "sql",
+         "websockets"
       ]
    }
    cpp.includePaths: base.concat([
@@ -20,12 +21,14 @@ UpgraderApplication
       return defines;
    }
    files: [
-      "application.cpp",
-      "application.h",
-      "command_runner.cpp",
-      "command_runner.h",
-      "main.cpp",
-   ]
+        "application.cpp",
+        "application.h",
+        "command_runner.cpp",
+        "command_runner.h",
+        "echoserver.cpp",
+        "echoserver.h",
+        "main.cpp",
+    ]
    
    Group {
       name: "command"
