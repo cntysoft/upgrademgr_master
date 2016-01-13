@@ -1,0 +1,4 @@
+#ifndef WEB_SERVICE_SERVER_H
+#define WEB_SERVICE_SERVER_H
+
+#endif // WEB_SERVICE_SERVER_H

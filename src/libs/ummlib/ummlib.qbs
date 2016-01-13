@@ -51,9 +51,11 @@ Product
       name:"network"
       prefix: name+"/"
       files:[
-         "multi_thread_server.cpp",
-         "multi_thread_server.h",
-      ]
+           "multi_thread_server.cpp",
+           "multi_thread_server.h",
+           "web_service_server.cpp",
+           "web_service_server.h",
+       ]
    }
    
    Group {
