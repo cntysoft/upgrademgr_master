@@ -14,19 +14,19 @@
 
 namespace upgrademgr{
 namespace master{
-namespace api{
+namespace service{
 namespace common{
 
 using ummlib::kernel::StdDir;
 using sn::corelib::ErrorInfo;
 using sn::corelib::Filesystem;
 
-Uploader::Uploader(ApiProvider& provider)
-   : AbstractApi(provider)
+Uploader::Uploader(ServiceProvider& provider)
+   : AbstractService(provider)
 {
 }
 
-ApiInvokeResponse Uploader::init(const ApiInvokeRequest &request)
+ServiceInvokeResponse Uploader::init(const ServiceInvokeRequest &request)
 {
    try{
       QList<QVariant> args = request.getArgs();
@@ -52,11 +52,11 @@ ApiInvokeResponse Uploader::init(const ApiInvokeRequest &request)
       file->open(QIODevice::Truncate | QIODevice::WriteOnly);
       context.targetFile = file;
       m_context[request.getSocketNum()] = context;
-      ApiInvokeResponse response("Common/Uploader/init", true);
+      ServiceInvokeResponse response("Common/Uploader/init", true);
       response.setSerial(request.getSerial());
       return response;
    }catch(ErrorInfo errorInfo){
-      ApiInvokeResponse response("Common/Uploader/init", false);
+      ServiceInvokeResponse response("Common/Uploader/init", false);
       response.setError({0, errorInfo.toString()});
       response.setSerial(request.getSerial());
       removeContextByRequestSocketId(request.getSocketNum());
@@ -64,14 +64,14 @@ ApiInvokeResponse Uploader::init(const ApiInvokeRequest &request)
    }
 }
 
-ApiInvokeResponse Uploader::receiveData(const ApiInvokeRequest &request)
+ServiceInvokeResponse Uploader::receiveData(const ServiceInvokeRequest &request)
 {
    try{
       UploadContext &context = getContextByRequest(request);
       if(context.step != UPLOAD_STEP_PREPARE && context.step != UPLOAD_STEP_PROCESS){
          throw ErrorInfo("上下文状态错误");  
       }
-      ApiInvokeResponse response("Common/Uploader/receiveData", true);
+      ServiceInvokeResponse response("Common/Uploader/receiveData", true);
       response.setSerial(request.getSerial());
       QByteArray unit = QByteArray::fromBase64(request.getExtraData());
       context.targetFile->write(unit);
@@ -90,7 +90,7 @@ ApiInvokeResponse Uploader::receiveData(const ApiInvokeRequest &request)
       response.setData(data);
       return response;
    }catch(ErrorInfo errorInfo){
-      ApiInvokeResponse response("Common/Uploader/receiveData", false);
+      ServiceInvokeResponse response("Common/Uploader/receiveData", false);
       response.setError({0, errorInfo.toString()});
       response.setSerial(request.getSerial());
       removeContextByRequestSocketId(request.getSocketNum());
@@ -98,7 +98,7 @@ ApiInvokeResponse Uploader::receiveData(const ApiInvokeRequest &request)
    }
 }
 
-ApiInvokeResponse Uploader::checkUploadResult(const ApiInvokeRequest &request)
+ServiceInvokeResponse Uploader::checkUploadResult(const ServiceInvokeRequest &request)
 {
    UploadContext &context = getContextByRequest(request);
    try{
@@ -106,7 +106,7 @@ ApiInvokeResponse Uploader::checkUploadResult(const ApiInvokeRequest &request)
          throw ErrorInfo("上下文状态错误");  
       }
       context.step = UPLOAD_STEP_CHECKSUM;
-      ApiInvokeResponse response("Common/Uploader/checkUploadResult", true);
+      ServiceInvokeResponse response("Common/Uploader/checkUploadResult", true);
       response.setSerial(request.getSerial());
       context.targetFile->close();
       QFile file(context.filename);
@@ -125,7 +125,7 @@ ApiInvokeResponse Uploader::checkUploadResult(const ApiInvokeRequest &request)
       removeContextByRequestSocketId(request.getSocketNum());
       return response;
    }catch(ErrorInfo errorInfo){
-      ApiInvokeResponse response("Common/Uploader/checkUploadResult", false);
+      ServiceInvokeResponse response("Common/Uploader/checkUploadResult", false);
       response.setError({0, errorInfo.toString()});
       response.setSerial(request.getSerial());
       QString filename = context.filename;
@@ -137,7 +137,7 @@ ApiInvokeResponse Uploader::checkUploadResult(const ApiInvokeRequest &request)
    }
 }
 
-Uploader::UploadContext& Uploader::getContextByRequest(const ApiInvokeRequest &request)
+Uploader::UploadContext& Uploader::getContextByRequest(const ServiceInvokeRequest &request)
 {
    Q_ASSERT_X(m_context.contains(request.getSocketNum()), "Uploader::getContextByRequest", "upload context is not exist");
    return m_context[request.getSocketNum()];
@@ -164,6 +164,6 @@ Uploader::~Uploader()
 }
 
 }//common
-}//api
+}//service
 }//master
 }//upgrademgr

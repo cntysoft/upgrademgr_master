@@ -17,7 +17,7 @@
 
 namespace upgrademgr{
 namespace master{
-namespace api{
+namespace service{
 namespace upgrader{
 
 using upgrademgr::master::Application;
@@ -26,17 +26,17 @@ using sn::corelib::Filesystem;
 
 const QString UpgradeUpgradeMgrMaster::RPM_FILENAME_TPL = "upgrademgr_master-%1-1.x86_64.rpm";
 
-UpgradeUpgradeMgrMaster::UpgradeUpgradeMgrMaster(sn::corelib::network::ApiProvider &provider)
-   : AbstractApi(provider),
+UpgradeUpgradeMgrMaster::UpgradeUpgradeMgrMaster(sn::corelib::network::ServiceProvider &provider)
+   : AbstractService(provider),
      m_softwareRepoDir(StdDir::getSoftwareRepoDir())
 {
 }
 
-ApiInvokeResponse UpgradeUpgradeMgrMaster::upgrade(const ApiInvokeRequest &request)
+ServiceInvokeResponse UpgradeUpgradeMgrMaster::upgrade(const ServiceInvokeRequest &request)
 {
    QList<QVariant> requestParams = request.getArgs();
    QString targetVersion = requestParams.takeLast().toString();
-   ApiInvokeResponse response("Upgrader/UpgradeUpgrademgrMaster/upgrade", true);
+   ServiceInvokeResponse response("Upgrader/UpgradeUpgrademgrMaster/upgrade", true);
    response.setSerial(request.getSerial());
    response.setDataItem("msg", "开始准备更新");
    writeInterResponse(request.getSocketNum(), response);
@@ -64,7 +64,7 @@ ApiInvokeResponse UpgradeUpgradeMgrMaster::upgrade(const ApiInvokeRequest &reque
       return response;
    }
    response.setDataItem("msg", "更新完成");
-   m_apiProvider.disconnectUnderlineSockets();
+   m_serviceProvider.disconnectUnderlineSockets();
    ummlib::network::MultiThreadServer *& server = ummlib::network::get_global_server();
    server->close();
    QStringList args = Application::instance()->arguments();
@@ -111,6 +111,6 @@ bool UpgradeUpgradeMgrMaster::installRpmPackage(const QString &filename, QString
 }
 
 }//upgrader
-}//api
+}//service
 }//master
 }//upgrademgr

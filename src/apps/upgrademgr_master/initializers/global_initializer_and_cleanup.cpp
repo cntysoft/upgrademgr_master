@@ -5,12 +5,12 @@ namespace master{
 
 void global_initializer()
 {
-   init_api_provider();
+   init_service_provider();
 }
 
 void global_cleanup()
 {
-   cleanup_api_provider();   
+   cleanup_service_provider();   
 }
 
 }//master

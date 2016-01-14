@@ -57,11 +57,11 @@ UpgraderApplication
    }
    
    Group {
-      name: "api"
+      name: "service"
       prefix: name+"/"
       files:[
-         "api_error_code.h",
-         "api_repo.h",
+         "service_error_code.h",
+         "service_repo.h",
          "common/uploader.cpp",
          "common/uploader.h",
          "macros.h",
@@ -79,7 +79,7 @@ UpgraderApplication
       prefix: name+"/"
       files:[
          "global_initializer_and_cleanup.cpp",
-         "init_api_provider.cpp",
+         "init_service_provider.cpp",
          "initializer_cleanup_funcs.h",
       ]
    }

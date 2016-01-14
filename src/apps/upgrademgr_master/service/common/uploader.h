@@ -1,26 +1,26 @@
-#ifndef UPGRADEMGR_MASTER_API_COMMON_UPLOADER_H
-#define UPGRADEMGR_MASTER_API_COMMON_UPLOADER_H
+#ifndef UPGRADEMGR_MASTER_SERVICE_COMMON_UPLOADER_H
+#define UPGRADEMGR_MASTER_SERVICE_COMMON_UPLOADER_H
 
 #include <QMap>
 #include <QString>
 #include <QFile>
 
-#include "api/macros.h"
-#include "corelib/network/rpc/abstract_api.h"
+#include "service/macros.h"
+#include "corelib/network/rpc/abstract_service.h"
 #include "corelib/network/rpc/invoke_meta.h"
-#include "corelib/network/rpc/api_provider.h"
+#include "corelib/network/rpc/service_provider.h"
 
 namespace upgrademgr{
 namespace master{
-namespace api{
+namespace service{
 namespace common{
 
-using sn::corelib::network::ApiInvokeRequest;
-using sn::corelib::network::ApiInvokeResponse;
+using sn::corelib::network::ServiceInvokeRequest;
+using sn::corelib::network::ServiceInvokeResponse;
 
-UMM_USING_API_NAMESPACES
+UMM_USING_SERVICE_NAMESPACES
 
-class Uploader : public AbstractApi
+class Uploader : public AbstractService
 {
    Q_OBJECT
    const static int UPLOAD_STEP_PREPARE = 0;
@@ -42,13 +42,13 @@ class Uploader : public AbstractApi
       int currentCycle = 0;
    };
 public:
-   Uploader(ApiProvider& provider);
+   Uploader(ServiceProvider& provider);
    virtual ~Uploader();
-   Q_INVOKABLE ApiInvokeResponse init(const ApiInvokeRequest &request);
-   Q_INVOKABLE ApiInvokeResponse receiveData(const ApiInvokeRequest &request);
-   Q_INVOKABLE ApiInvokeResponse checkUploadResult(const ApiInvokeRequest &request);
+   Q_INVOKABLE ServiceInvokeResponse init(const ServiceInvokeRequest &request);
+   Q_INVOKABLE ServiceInvokeResponse receiveData(const ServiceInvokeRequest &request);
+   Q_INVOKABLE ServiceInvokeResponse checkUploadResult(const ServiceInvokeRequest &request);
 protected:
-   UploadContext& getContextByRequest(const ApiInvokeRequest &request);
+   UploadContext& getContextByRequest(const ServiceInvokeRequest &request);
    Uploader& removeContextByRequestSocketId(int sid);
 protected:
    QMap<int, UploadContext> m_context;
@@ -56,8 +56,8 @@ protected:
 };
 
 }//common
-}//api
+}//service
 }//master
 }//upgrademgr
 
-#endif // UPGRADEMGR_MASTER_API_COMMON_UPLOADER_H
+#endif // UPGRADEMGR_MASTER_SERVICE_COMMON_UPLOADER_H

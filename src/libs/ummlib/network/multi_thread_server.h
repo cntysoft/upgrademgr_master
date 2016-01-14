@@ -12,7 +12,7 @@ QT_END_NAMESPACE
 
 #include "corelib/network/abstract_multi_thread_server.h"
 #include "corelib/kernel/application.h"
-#include "corelib/network/rpc/api_provider.h"
+#include "corelib/network/rpc/service_provider.h"
 #include "corelib/network/rpc/invoke_meta.h"
 
 namespace ummlib{
@@ -20,24 +20,24 @@ namespace network{
 
 using sn::corelib::Application;
 using sn::corelib::network::AbstractMultiThreadServer;
-using sn::corelib::network::ApiProvider;
-using sn::corelib::network::ApiInvokeRequest;
-using sn::corelib::network::ApiInvokeResponse;
+using sn::corelib::network::ServiceProvider;
+using sn::corelib::network::ServiceInvokeRequest;
+using sn::corelib::network::ServiceInvokeResponse;
 
 class UM_MASTER_LIB_EXPORT MultiThreadServer : public AbstractMultiThreadServer
 {
 public:
    MultiThreadServer(Application& app, QObject* parent = nullptr);
    virtual ~MultiThreadServer();
-   ApiProvider& getApiProvider();
+   ServiceProvider& getServiceProvider();
 protected:
    virtual void incomingConnection(qintptr socketDescriptor);
-   void processRequest(const ApiInvokeRequest &request);
+   void processRequest(const ServiceInvokeRequest &request);
 protected slots:
    void unboxRequest();
 protected:
    QByteArray m_packageUnitBuffer;
-   ApiProvider& m_apiProvider;
+   ServiceProvider& m_serviceProvider;
    static QMap<int, QTcpSocket*> m_connections;
 };
 

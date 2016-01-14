@@ -3,8 +3,8 @@
 namespace upgrademgr{
 namespace master{
 
-void init_api_provider();
-void cleanup_api_provider();
+void init_service_provider();
+void cleanup_service_provider();
 
 }//master
 }//upgrademgr

@@ -9,14 +9,14 @@
 
 namespace upgrademgr{
 namespace master{
-namespace api{
+namespace service{
 namespace repo{
 
 using ummlib::kernel::StdDir;
 using sn::corelib::Filesystem;
 
-Info::Info(ApiProvider &provider)
-   : AbstractApi(provider),
+Info::Info(ServiceProvider &provider)
+   : AbstractService(provider),
      m_dataDir(StdDir::getBaseDataDir()+"/softwarerepo")
 {
    if(!Filesystem::dirExist(m_dataDir)){
@@ -24,7 +24,7 @@ Info::Info(ApiProvider &provider)
    }
 }
 
-ApiInvokeResponse Info::lsSoftwareRepoDir(const ApiInvokeRequest &request)
+ServiceInvokeResponse Info::lsSoftwareRepoDir(const ServiceInvokeRequest &request)
 {
    int baseLength = m_dataDir.size()+1;
    QStringList list;
@@ -35,13 +35,13 @@ ApiInvokeResponse Info::lsSoftwareRepoDir(const ApiInvokeRequest &request)
    buffer.open(QIODevice::WriteOnly);
    QDataStream out(&buffer);
    out << list;
-   ApiInvokeResponse response("Repo/Info/lsSoftwareRepoDir", true);
+   ServiceInvokeResponse response("Repo/Info/lsSoftwareRepoDir", true);
    response.setExtraData(buffer.data());
    response.setSerial(request.getSerial());
    return response;
 }
 
 }//repo
-}//api
+}//service
 }//master
 }//upgrademgr

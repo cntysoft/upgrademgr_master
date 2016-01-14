@@ -11,13 +11,13 @@ static MultiThreadServer *globalServer = nullptr;
 
 MultiThreadServer::MultiThreadServer(Application& app,QObject *parent)
    : AbstractMultiThreadServer(app, parent),
-     m_apiProvider(ApiProvider::instance())
+     m_serviceProvider(ServiceProvider::instance())
 {
 }
 
-ApiProvider& MultiThreadServer::getApiProvider()
+ServiceProvider& MultiThreadServer::getServiceProvider()
 {
-   return m_apiProvider;
+   return m_serviceProvider;
 }
 
 void MultiThreadServer::incomingConnection(qintptr socketDescriptor)
@@ -25,7 +25,7 @@ void MultiThreadServer::incomingConnection(qintptr socketDescriptor)
    //这里暂时不进行加密处理
    //暂时也不进行多线程实现
    QTcpSocket* socket = new QTcpSocket(this);
-   ApiProvider& provider = ApiProvider::instance();
+   ServiceProvider& provider = ServiceProvider::instance();
    provider.setUnderlineSocket((int) socketDescriptor, socket);
    socket->setSocketDescriptor(socketDescriptor);
    connect(socket, &QTcpSocket::readyRead, this, &MultiThreadServer::unboxRequest);
@@ -47,7 +47,7 @@ void MultiThreadServer::unboxRequest()
             if('\n' == forward1 && '\t' == forward2){
                //解压当前的包
                QDataStream stream(m_packageUnitBuffer);
-               ApiInvokeRequest request;
+               ServiceInvokeRequest request;
                stream >> request;
                request.setSocketNum((int)socket->socketDescriptor());
                processRequest(request);
@@ -68,9 +68,9 @@ MultiThreadServer::~MultiThreadServer()
 {
 }
 
-void MultiThreadServer::processRequest(const ApiInvokeRequest &request)
+void MultiThreadServer::processRequest(const ServiceInvokeRequest &request)
 {
-   m_apiProvider.callApi(request);
+   m_serviceProvider.callService(request);
 }
 
 MultiThreadServer*& get_global_server()
