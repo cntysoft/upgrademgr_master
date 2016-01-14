@@ -29,7 +29,7 @@ class UM_MASTER_LIB_EXPORT WebServiceServer : public QWebSocketServer
 {
    Q_OBJECT
 public:
-   
+   const static int SUPER_SERIAL_CODE = 0;
 public:
    WebServiceServer(Application &app, const QString &serverName, QObject* parent = nullptr);
    virtual ~WebServiceServer();

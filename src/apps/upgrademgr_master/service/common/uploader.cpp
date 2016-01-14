@@ -29,32 +29,32 @@ Uploader::Uploader(ServiceProvider& provider)
 ServiceInvokeResponse Uploader::init(const ServiceInvokeRequest &request)
 {
    try{
-      QList<QVariant> args = request.getArgs();
-      QString baseDir = args.at(0).toString();
-      if(baseDir.isEmpty()){
-         baseDir = StdDir::getSoftwareRepoDir();
-      }
-      if(!Filesystem::dirExist(baseDir)){
-         Filesystem::createPath(baseDir);
-      }
-      QString filename = args.at(1).toString();
-      QFileInfo fileInfo(filename);
-      filename = baseDir+"/"+fileInfo.fileName();
-      UploadContext context;
-      context.baseDir = baseDir;
-      context.filename = filename;
-      context.md5 = args.at(2).toString();
-      context.total = args.at(3).toInt();
-      context.uploaded = 0;
-      context.step = UPLOAD_STEP_PREPARE;
-      context.cycleSize = args.at(4).toInt();
-      QFile *file = new QFile(filename);
-      file->open(QIODevice::Truncate | QIODevice::WriteOnly);
-      context.targetFile = file;
-      m_context[request.getSocketNum()] = context;
-      ServiceInvokeResponse response("Common/Uploader/init", true);
-      response.setSerial(request.getSerial());
-      return response;
+//      QMap<QString, QVariant> args = request.getArgs();
+//      QString baseDir = args.at(0).toString();
+//      if(baseDir.isEmpty()){
+//         baseDir = StdDir::getSoftwareRepoDir();
+//      }
+//      if(!Filesystem::dirExist(baseDir)){
+//         Filesystem::createPath(baseDir);
+//      }
+//      QString filename = args.at(1).toString();
+//      QFileInfo fileInfo(filename);
+//      filename = baseDir+"/"+fileInfo.fileName();
+//      UploadContext context;
+//      context.baseDir = baseDir;
+//      context.filename = filename;
+//      context.md5 = args.at(2).toString();
+//      context.total = args.at(3).toInt();
+//      context.uploaded = 0;
+//      context.step = UPLOAD_STEP_PREPARE;
+//      context.cycleSize = args.at(4).toInt();
+//      QFile *file = new QFile(filename);
+//      file->open(QIODevice::Truncate | QIODevice::WriteOnly);
+//      context.targetFile = file;
+//      m_context[request.getSocketNum()] = context;
+//      ServiceInvokeResponse response("Common/Uploader/init", true);
+//      response.setSerial(request.getSerial());
+//      return response;
    }catch(ErrorInfo errorInfo){
       ServiceInvokeResponse response("Common/Uploader/init", false);
       response.setError({0, errorInfo.toString()});

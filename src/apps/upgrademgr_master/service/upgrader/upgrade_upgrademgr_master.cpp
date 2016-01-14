@@ -34,47 +34,47 @@ UpgradeUpgradeMgrMaster::UpgradeUpgradeMgrMaster(sn::corelib::network::ServicePr
 
 ServiceInvokeResponse UpgradeUpgradeMgrMaster::upgrade(const ServiceInvokeRequest &request)
 {
-   QList<QVariant> requestParams = request.getArgs();
-   QString targetVersion = requestParams.takeLast().toString();
-   ServiceInvokeResponse response("Upgrader/UpgradeUpgrademgrMaster/upgrade", true);
-   response.setSerial(request.getSerial());
-   response.setDataItem("msg", "开始准备更新");
-   writeInterResponse(request.getSocketNum(), response);
-   response.setDataItem("msg", "比较当前服务器的版本");
-   QString currentVersion = upgrademgr::master::get_upgrademgr_master_version();
-   if(versionCompare(currentVersion, targetVersion) >= 0){
-      response.setDataItem("lasted", true);
-      response.setDataItem("msg", "当前已是最新版本，无须更新");
-      return response;
-   }
-   response.setDataItem("msg", "开始检查指定版本的服务器RPM包");
-   QString filename = m_softwareRepoDir + "/" +QString(RPM_FILENAME_TPL).arg(targetVersion);
-   if(!Filesystem::fileExist(filename)){
-      response.setError({1, QString("软件包:%1不存在").arg(filename)});
-      response.setStatus(false);
-      return response;
-   }
-   response.setDataItem("msg", "开始安装RPM包");
-   writeInterResponse(request.getSocketNum(), response);
-   QString errorString;
-   int status = installRpmPackage(filename, errorString);
-   if(!status){
-      response.setStatus(false);
-      response.setError({1, errorString});
-      return response;
-   }
-   response.setDataItem("msg", "更新完成");
-   m_serviceProvider.disconnectUnderlineSockets();
-   ummlib::network::MultiThreadServer *& server = ummlib::network::get_global_server();
-   server->close();
-   QStringList args = Application::instance()->arguments();
-   args.takeFirst();
-   args.removeAll("--daemon");
-   if(QProcess::startDetached(upgrademgr::master::get_application_filepath(), args, QDir::currentPath())){
-      Application::instance()->exit(EXIT_SUCCESS);
-   }
-   Application::instance()->exit(1);
-   return response;
+//   QList<QVariant> requestParams = request.getArgs();
+//   QString targetVersion = requestParams.takeLast().toString();
+//   ServiceInvokeResponse response("Upgrader/UpgradeUpgrademgrMaster/upgrade", true);
+//   response.setSerial(request.getSerial());
+//   response.setDataItem("msg", "开始准备更新");
+//   writeInterResponse(request.getSocketNum(), response);
+//   response.setDataItem("msg", "比较当前服务器的版本");
+//   QString currentVersion = upgrademgr::master::get_upgrademgr_master_version();
+//   if(versionCompare(currentVersion, targetVersion) >= 0){
+//      response.setDataItem("lasted", true);
+//      response.setDataItem("msg", "当前已是最新版本，无须更新");
+//      return response;
+//   }
+//   response.setDataItem("msg", "开始检查指定版本的服务器RPM包");
+//   QString filename = m_softwareRepoDir + "/" +QString(RPM_FILENAME_TPL).arg(targetVersion);
+//   if(!Filesystem::fileExist(filename)){
+//      response.setError({1, QString("软件包:%1不存在").arg(filename)});
+//      response.setStatus(false);
+//      return response;
+//   }
+//   response.setDataItem("msg", "开始安装RPM包");
+//   writeInterResponse(request.getSocketNum(), response);
+//   QString errorString;
+//   int status = installRpmPackage(filename, errorString);
+//   if(!status){
+//      response.setStatus(false);
+//      response.setError({1, errorString});
+//      return response;
+//   }
+//   response.setDataItem("msg", "更新完成");
+//   m_serviceProvider.disconnectUnderlineSockets();
+//   ummlib::network::MultiThreadServer *& server = ummlib::network::get_global_server();
+//   server->close();
+//   QStringList args = Application::instance()->arguments();
+//   args.takeFirst();
+//   args.removeAll("--daemon");
+//   if(QProcess::startDetached(upgrademgr::master::get_application_filepath(), args, QDir::currentPath())){
+//      Application::instance()->exit(EXIT_SUCCESS);
+//   }
+//   Application::instance()->exit(1);
+//   return response;
 }
 
 int UpgradeUpgradeMgrMaster::versionCompare(const QString &version1, const QString &version2)

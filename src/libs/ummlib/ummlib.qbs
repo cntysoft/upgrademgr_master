@@ -42,9 +42,10 @@ Product
       name: "global"
       prefix: name+"/"
       files: [
-         "const.h",
-         "global.h",
-      ]
+           "const.h",
+           "error_code.h",
+           "global.h",
+       ]
    }
    
    Group {

@@ -5,13 +5,15 @@
 #include <QChar>
 #include <QString>
 #include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonValue>
 #include <QJsonParseError>
 
 #include "web_service_server.h"
+#include "global/error_code.h"
 
 namespace ummlib{
 namespace network{
-
 
 static WebServiceServer *globalServer = nullptr;
 
@@ -86,6 +88,7 @@ void WebServiceServer::newConnectionHandler()
 void WebServiceServer::socketDisconnectedHandler()
 {
    QWebSocket *socket = qobject_cast<QWebSocket *>(sender());
+   qDebug() << "disconnected";
    if (socket) {
       socket->deleteLater();
    }
@@ -95,6 +98,7 @@ void WebServiceServer::unboxRequest(const QByteArray &message)
 {
    QWebSocket *socket = qobject_cast<QWebSocket *>(sender());
    QByteArray unit = QByteArray::fromBase64(message);
+   qDebug() << unit;
    ServiceInvokeRequest request;
    QJsonParseError parserError;
    request.setIsWebSocket(true);
@@ -102,21 +106,58 @@ void WebServiceServer::unboxRequest(const QByteArray &message)
    if(parserError.error == QJsonParseError::NoError){
       if(jsonDoc.isObject()){
          QJsonObject packageObject = jsonDoc.object();
-         
+         QStringList topLevelKeys = packageObject.keys();
+         QStringList leakKeys;
+         for(int i = 0; i < WebServiceServer::m_requirePackageKeys.length(); i++){
+            if(!topLevelKeys.contains(WebServiceServer::m_requirePackageKeys.at(i))){
+               leakKeys.append(WebServiceServer::m_requirePackageKeys.at(i));
+            }
+         }
+         if(!leakKeys.isEmpty()){
+            processProtocolParseError(*socket, ummlib::E_PROTOCOL_ILL_FORMAT, QString("缺少协议必要字段: %1").arg(leakKeys.join(", ")));
+            return;
+         }
+         request.setName(packageObject.value("name").toString());
+         request.setMethod(packageObject.value("method").toString());
+         request.setSerial(packageObject.value("serial").toInt());
+         if(packageObject.contains("extraData")){
+            QByteArray extraData;
+            extraData.append(packageObject.value("extraData").toString());
+            request.setExtraData(extraData);
+         }
+         if(packageObject.contains("args")){
+            QJsonObject args = packageObject.value("args").toObject();
+            QJsonObject::const_iterator it = args.constBegin();
+            while(it != args.constEnd()){
+               request.setArg(it.key(), it.value().toVariant());
+               it++;
+            }
+         }
       }else{
          //出错处理
+         processProtocolParseError(*socket, ummlib::E_PROTOCOL_ILL_FORMAT, "协议json根元素不为对象");
       }
    }else{
       //记录日志等等
       //协议错误
-      
+      processProtocolParseError(*socket, ummlib::E_PROTOCOL_ILL_FORMAT, parserError.errorString());
       qDebug() << parserError.errorString();
    }
 }
 
 void WebServiceServer::processProtocolParseError(QWebSocket &socket, int errorCode, const QString &errorString)
 {
-   
+   QJsonDocument responseJsonDoc;
+   QJsonObject packageObject;
+   packageObject.insert("signature", "kernel/protocolParser");
+   packageObject.insert("status", false);
+   packageObject.insert("errorCode", errorCode);
+   packageObject.insert("errorString", errorString);
+   packageObject.insert("isFinal", true);
+   packageObject.insert("serial", QJsonValue(WebServiceServer::SUPER_SERIAL_CODE));
+   responseJsonDoc.setObject(packageObject);
+   socket.sendTextMessage(responseJsonDoc.toJson().toBase64());
+   socket.flush();
 }
 
 WebServiceServer::~WebServiceServer()
