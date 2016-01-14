@@ -13,6 +13,7 @@
 #include "corelib/kernel/settings.h"
 #include "ummlib/global/const.h"
 #include "ummlib/network/multi_thread_server.h"
+#include "ummlib/network/web_service_server.h"
 
 namespace upgrademgr{
 namespace master{
@@ -23,6 +24,7 @@ using sn::corelib::ErrorInfo;
 using sn::corelib::Settings;
 
 using ummlib::network::MultiThreadServer;
+using ummlib::network::WebServiceServer;
 
 using upgrademgr::master::Application;
 using upgrademgr::master::get_app_ref;
@@ -50,12 +52,18 @@ void StartServerCommand::exec()
          throw ErrorInfo("start daemon failure, Failed to create process");
       }
    }
-   MultiThreadServer* server = new MultiThreadServer(app);
+   MultiThreadServer *server = new MultiThreadServer(app);
+   WebServiceServer *webServiceServer = new WebServiceServer(app, "websocketserver");
    ummlib::network::set_global_server(server);
+   ummlib::network::set_global_web_service_server(webServiceServer);
    server->setHost(QHostAddress::Any);
    server->setPort(port);
+   
+   webServiceServer->setHost(QHostAddress::Any);
+   webServiceServer->setPort(port + 1);
    app.createPidFile();
    bool status = server->run();
+   bool webServiceStatus = webServiceServer->run();
    //防止内存泄漏,这里利用闭包复制指针
    QObject::connect(&app, &Application::aboutToQuit, [&app](){
       MultiThreadServer*& server = ummlib::network::get_global_server();
@@ -66,6 +74,9 @@ void StartServerCommand::exec()
    });
    if(!status){
       throw ErrorInfo(server->errorString());
+   }
+   if(!webServiceStatus){
+      throw ErrorInfo(webServiceServer->errorString());
    }
 }
 

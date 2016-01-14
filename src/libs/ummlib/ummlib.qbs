@@ -6,7 +6,7 @@ Product
    targetName : "umm"
    Depends { 
       name: "Qt"; 
-      submodules: ["core", "network"]
+      submodules: ["core", "network","websockets"]
    }
    Depends { name:"corelib"}
    Depends { name:"cpp"}

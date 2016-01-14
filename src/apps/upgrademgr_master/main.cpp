@@ -27,17 +27,16 @@ int main(int argc, char *argv[])
 {
    try{
       CloudControllerApplication app(argc, argv);
-      EchoServer *server = new EchoServer(7778, true);
-          QObject::connect(server, &EchoServer::closed, &app, &QCoreApplication::quit);
-      //      qAddPreRoutine(upgrademgr::master::global_initializer);
-      //      qAddPostRoutine(upgrademgr::master::global_cleanup);
-            
-      //      app.ensureImportantDir();
-      //      app.watchUnixSignal(SIGINT, true);
-      //      CommandRunner cmdrunner(app);
-      //      QTimer::singleShot(0, Qt::PreciseTimer, [&cmdrunner]{
-      //         cmdrunner.run();
-      //      });
+      //      EchoServer *server = new EchoServer(7778, true);
+      //          QObject::connect(server, &EchoServer::closed, &app, &QCoreApplication::quit);
+      qAddPreRoutine(upgrademgr::master::global_initializer);
+      qAddPostRoutine(upgrademgr::master::global_cleanup);
+      app.ensureImportantDir();
+      app.watchUnixSignal(SIGINT, true);
+      CommandRunner cmdrunner(app);
+      QTimer::singleShot(0, Qt::PreciseTimer, [&cmdrunner]{
+         cmdrunner.run();
+      });
       return app.exec();
    }catch(const ErrorInfo& errorInfo){
       QString str(errorInfo.toString());

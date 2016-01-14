@@ -76,6 +76,10 @@ void CommandRunner::initRouteItems()
                   {"category", "Global"},
                   {"name", "Help"}
                });
+   addCmdRoute("startserver", "start [--daemon] [--port]", 1, {
+                  {"category", "Global"},
+                  {"name", "StartServer"}
+               });
    addCmdRoute("setwebserversoftware", "webserversoftware set <name> <version>", 1, {
                   {"category", "Global"},
                   {"name", "SetWebServerSoftwareItem"}
