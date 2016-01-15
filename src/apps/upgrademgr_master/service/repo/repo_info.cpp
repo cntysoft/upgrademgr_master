@@ -35,7 +35,7 @@ ServiceInvokeResponse Info::lsSoftwareRepoDir(const ServiceInvokeRequest &reques
    buffer.open(QIODevice::WriteOnly);
    QDataStream out(&buffer);
    out << list;
-   ServiceInvokeResponse response("Repo/Info/lsSoftwareRepoDir", true);
+   ServiceInvokeResponse response("Repo/Info/lsSoftwareRepoDir12", true);
    response.setExtraData(buffer.data());
    response.setSerial(request.getSerial());
    return response;

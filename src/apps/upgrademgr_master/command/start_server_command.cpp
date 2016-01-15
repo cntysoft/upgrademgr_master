@@ -66,9 +66,13 @@ void StartServerCommand::exec()
    bool webServiceStatus = webServiceServer->run();
    //防止内存泄漏,这里利用闭包复制指针
    QObject::connect(&app, &Application::aboutToQuit, [&app](){
-      MultiThreadServer*& server = ummlib::network::get_global_server();
+      MultiThreadServer *&server = ummlib::network::get_global_server();
       if(nullptr != server){
          delete server;
+      }
+      WebServiceServer *&webServiceServer = ummlib::network::get_global_web_service_server();
+      if(nullptr != webServiceServer){
+         delete webServiceServer;
       }
       app.deletePidFile();
    });

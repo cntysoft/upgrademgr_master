@@ -42,8 +42,8 @@ public:
    WebServiceServer& setEnableSsl(bool flag);
    bool getEnableSsl();
 protected:
-   void processRequest(const ServiceInvokeRequest &request);
    void processProtocolParseError(QWebSocket &socket, int errorCode, const QString &errorString);
+   int getSocketKeyIndex();
 protected slots:
    void unboxRequest(const QByteArray &message);
    void socketDisconnectedHandler();

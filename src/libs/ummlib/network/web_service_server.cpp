@@ -9,6 +9,8 @@
 #include <QJsonValue>
 #include <QJsonParseError>
 
+#include <ctime>
+
 #include "web_service_server.h"
 #include "global/error_code.h"
 
@@ -81,8 +83,11 @@ void WebServiceServer::newConnectionHandler()
    QWebSocket *socket = nextPendingConnection();
    connect(socket, &QWebSocket::binaryMessageReceived, this, &WebServiceServer::unboxRequest);
    connect(socket, &QWebSocket::disconnected, this, &WebServiceServer::socketDisconnectedHandler);
-   //   ServiceProvider& provider = ServiceProvider::instance();
-   //   provider.setUnderlineSocket((int) socketDescriptor, socket);
+}
+
+int WebServiceServer::getSocketKeyIndex()
+{
+   return static_cast<int>(std::time(nullptr));
 }
 
 void WebServiceServer::socketDisconnectedHandler()
@@ -98,10 +103,13 @@ void WebServiceServer::unboxRequest(const QByteArray &message)
 {
    QWebSocket *socket = qobject_cast<QWebSocket *>(sender());
    QByteArray unit = QByteArray::fromBase64(message);
-   qDebug() << unit;
    ServiceInvokeRequest request;
    QJsonParseError parserError;
    request.setIsWebSocket(true);
+   ServiceProvider& provider = ServiceProvider::instance();
+   int index = getSocketKeyIndex();
+   request.setSocketNum(index);
+   provider.setUnderlineSocket(index, socket);
    QJsonDocument jsonDoc = QJsonDocument::fromJson(unit, &parserError);
    if(parserError.error == QJsonParseError::NoError){
       if(jsonDoc.isObject()){
@@ -133,6 +141,7 @@ void WebServiceServer::unboxRequest(const QByteArray &message)
                it++;
             }
          }
+         m_serviceProvider.callService(request);
       }else{
          //出错处理
          processProtocolParseError(*socket, ummlib::E_PROTOCOL_ILL_FORMAT, "协议json根元素不为对象");
@@ -141,7 +150,6 @@ void WebServiceServer::unboxRequest(const QByteArray &message)
       //记录日志等等
       //协议错误
       processProtocolParseError(*socket, ummlib::E_PROTOCOL_ILL_FORMAT, parserError.errorString());
-      qDebug() << parserError.errorString();
    }
 }
 
@@ -162,11 +170,6 @@ void WebServiceServer::processProtocolParseError(QWebSocket &socket, int errorCo
 
 WebServiceServer::~WebServiceServer()
 {
-}
-
-void WebServiceServer::processRequest(const ServiceInvokeRequest &request)
-{
-   //m_serviceProvider.callService(request);
 }
 
 WebServiceServer*& get_global_web_service_server()

@@ -8,7 +8,6 @@
 #include "application.h"
 #include "command_runner.h"
 #include <QDebug>
-#include "echoserver.h"
 
 using CloudControllerApplication = upgrademgr::master::Application;
 using CommandRunner = upgrademgr::master::CommandRunner;
@@ -27,8 +26,6 @@ int main(int argc, char *argv[])
 {
    try{
       CloudControllerApplication app(argc, argv);
-      //      EchoServer *server = new EchoServer(7778, true);
-      //          QObject::connect(server, &EchoServer::closed, &app, &QCoreApplication::quit);
       qAddPreRoutine(upgrademgr::master::global_initializer);
       qAddPostRoutine(upgrademgr::master::global_cleanup);
       app.ensureImportantDir();
