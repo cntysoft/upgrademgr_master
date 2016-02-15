@@ -1,5 +1,5 @@
-#ifndef UPGRADEMGR_MASTER_LIB_NETWORK_WEB_SERVICE_SERVER_H
-#define UPGRADEMGR_MASTER_LIB_NETWORK_WEB_SERVICE_SERVER_H
+#ifndef UMM_LIB_NETWORK_WEB_SERVICE_SERVER_H
+#define UMM_LIB_NETWORK_WEB_SERVICE_SERVER_H
 
 #include <QMap>
 #include <QByteArray>
@@ -25,7 +25,7 @@ using sn::corelib::network::ServiceProvider;
 using sn::corelib::network::ServiceInvokeRequest;
 using sn::corelib::network::ServiceInvokeResponse;
 
-class UM_MASTER_LIB_EXPORT WebServiceServer : public QWebSocketServer
+class UMM_LIB_EXPORT WebServiceServer : public QWebSocketServer
 {
    Q_OBJECT
 public:
@@ -58,11 +58,11 @@ protected:
    static QStringList m_requirePackageKeys;
 };
 
-UM_MASTER_LIB_EXPORT WebServiceServer*& get_global_web_service_server();
-UM_MASTER_LIB_EXPORT void set_global_web_service_server(WebServiceServer* server);
+UMM_LIB_EXPORT WebServiceServer*& get_global_web_service_server();
+UMM_LIB_EXPORT void set_global_web_service_server(WebServiceServer* server);
 
 }//network
 }//ummlib
 
 
-#endif // UPGRADEMGR_MASTER_LIB_NETWORK_WEB_SERVICE_SERVER_H
+#endif // UMM_LIB_NETWORK_WEB_SERVICE_SERVER_H

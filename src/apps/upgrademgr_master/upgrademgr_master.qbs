@@ -25,8 +25,6 @@ UpgraderApplication
         "application.h",
         "command_runner.cpp",
         "command_runner.h",
-        "echoserver.cpp",
-        "echoserver.h",
         "main.cpp",
     ]
    

@@ -14,12 +14,13 @@ Product
    cpp.defines: {
       var defines = [];
       if(product.type == "staticlibrary"){
-         defines.push("UM_MASTER_STATIC_LIB");
+         defines.push("UMM_STATIC_LIB");
       }else{
-         defines.push("UM_MASTER_LIBRARY");
+         defines.push("UMM_LIBRARY");
       }
       defines = defines.concat([
-                                  'UMM_LIB_VERSION="'+ version+'"'
+                                  'UMM_LIB_VERSION="'+ version+'"',
+                                  'UMM_MASTER_VERSION="' + project.upgrademgrMasterversion+'"'
                                ]);
       return defines;
    }
@@ -42,6 +43,8 @@ Product
       name: "global"
       prefix: name+"/"
       files: [
+           "common_funcs.cpp",
+           "common_funcs.h",
            "const.h",
            "error_code.h",
            "global.h",

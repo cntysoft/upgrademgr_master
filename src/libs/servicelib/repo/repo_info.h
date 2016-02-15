@@ -1,7 +1,7 @@
-#ifndef UPGRADEMGR_MASTER_SERVICE_REPO_INFO_H
-#define UPGRADEMGR_MASTER_SERVICE_REPO_INFO_H
+#ifndef UMM_SERVICE_REPO_INFO_H
+#define UMM_SERVICE_REPO_INFO_H
 
-#include "service/macros.h"
+#include "macros.h"
 #include "corelib/network/rpc/abstract_service.h"
 #include "corelib/network/rpc/invoke_meta.h"
 #include "corelib/network/rpc/service_provider.h"
@@ -28,4 +28,4 @@ protected:
 }//master
 }//upgrademgr
 
-#endif // UPGRADEMGR_MASTER_SERVICE_REPO_INFO_H
+#endif // UMM_SERVICE_REPO_INFO_H

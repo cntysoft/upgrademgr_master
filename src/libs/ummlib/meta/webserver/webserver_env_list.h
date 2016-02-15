@@ -1,5 +1,5 @@
-#ifndef UPGRADEMGR_MASTER_LIB_META_WEBSERVER_WEBSERVER_ENV_LIST_H
-#define UPGRADEMGR_MASTER_LIB_META_WEBSERVER_WEBSERVER_ENV_LIST_H
+#ifndef UMM_LIB_META_WEBSERVER_WEBSERVER_ENV_LIST_H
+#define UMM_LIB_META_WEBSERVER_WEBSERVER_ENV_LIST_H
 
 #include "ummlib/global/global.h"
 
@@ -11,7 +11,7 @@ namespace webserver{
 
 using ummlib::kernel::StdDir;
 
-class UM_MASTER_LIB_EXPORT WebServerEnvList
+class UMM_LIB_EXPORT WebServerEnvList
 {
 public:
    static QString& getEnvRepoMetaFile();
@@ -22,5 +22,5 @@ public:
 }//meta
 }//ummlib
 
-#endif // UPGRADEMGR_MASTER_LIB_META_WEBSERVER_WEBSERVER_ENV_LIST_H
+#endif // UMM_LIB_META_WEBSERVER_WEBSERVER_ENV_LIST_H
 

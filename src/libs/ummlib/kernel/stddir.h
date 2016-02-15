@@ -1,5 +1,5 @@
-#ifndef UPGRADEMGR_MASTER_LIB_KERNEL_STDDIR_H
-#define UPGRADEMGR_MASTER_LIB_KERNEL_STDDIR_H
+#ifndef UMM_LIB_KERNEL_STDDIR_H
+#define UMM_LIB_KERNEL_STDDIR_H
 
 #include <QString>
 
@@ -14,7 +14,7 @@ namespace kernel{
 using BaseStdDir = sn::corelib::StdDir;
 using sn::corelib::Application;
 
-class UM_MASTER_LIB_EXPORT StdDir : public BaseStdDir
+class UMM_LIB_EXPORT StdDir : public BaseStdDir
 {
 public:
    static QString getBaseDataDir();
@@ -25,4 +25,4 @@ public:
 }//network
 }//ummlib
 
-#endif // UPGRADEMGR_MASTER_LIB_KERNEL_STDDIR_H
+#endif // UMM_LIB_KERNEL_STDDIR_H

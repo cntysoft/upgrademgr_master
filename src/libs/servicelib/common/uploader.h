@@ -1,11 +1,11 @@
-#ifndef UPGRADEMGR_MASTER_SERVICE_COMMON_UPLOADER_H
-#define UPGRADEMGR_MASTER_SERVICE_COMMON_UPLOADER_H
+#ifndef UMM_SERVICE_COMMON_UPLOADER_H
+#define UMM_SERVICE_COMMON_UPLOADER_H
 
 #include <QMap>
 #include <QString>
 #include <QFile>
 
-#include "service/macros.h"
+#include "macros.h"
 #include "corelib/network/rpc/abstract_service.h"
 #include "corelib/network/rpc/invoke_meta.h"
 #include "corelib/network/rpc/service_provider.h"
@@ -60,4 +60,4 @@ protected:
 }//master
 }//upgrademgr
 
-#endif // UPGRADEMGR_MASTER_SERVICE_COMMON_UPLOADER_H
+#endif // UMM_SERVICE_COMMON_UPLOADER_H

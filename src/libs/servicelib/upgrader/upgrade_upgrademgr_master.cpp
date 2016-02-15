@@ -9,18 +9,13 @@
 
 #include "ummlib/network/multi_thread_server.h"
 #include "ummlib/kernel/stddir.h"
-#include "utils/common_funcs.h"
-
 #include "upgrade_upgrademgr_master.h"
-#include "application.h"
-
 
 namespace upgrademgr{
 namespace master{
 namespace service{
 namespace upgrader{
 
-using upgrademgr::master::Application;
 using ummlib::kernel::StdDir;
 using sn::corelib::Filesystem;
 

@@ -1,5 +1,5 @@
-#include "utils/common_funcs.h"
-#include "service/serverstatus/server_info.h"
+#include "serverstatus/server_info.h"
+#include "ummlib/global/common_funcs.h"
 
 namespace upgrademgr{
 namespace master{
@@ -15,7 +15,7 @@ ServiceInvokeResponse Info::getVersionInfo(const ServiceInvokeRequest &request)
 {
    ServiceInvokeResponse response("ServerStatus/Info/getVersionInfo", true);
    response.setSerial(request.getSerial());
-   response.setDataItem("version", upgrademgr::master::get_upgrademgr_master_version());
+   response.setDataItem("version", ummlib::global::get_upgrademgr_master_version());
    return response;
 }
 
