@@ -7,6 +7,7 @@ Product {
    }
    Depends {name:"cpp"}
    Depends { name: "ummlib"}
+   Depends { name: "ummservicelib"}
    Depends { name: "corelib"}
    consoleApplication: true
    destinationDirectory: "bin"

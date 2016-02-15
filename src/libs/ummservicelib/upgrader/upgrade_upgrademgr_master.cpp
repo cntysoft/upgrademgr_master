@@ -11,9 +11,7 @@
 #include "ummlib/kernel/stddir.h"
 #include "upgrade_upgrademgr_master.h"
 
-namespace upgrademgr{
-namespace master{
-namespace service{
+namespace ummservice{
 namespace upgrader{
 
 using ummlib::kernel::StdDir;
@@ -106,6 +104,4 @@ bool UpgradeUpgradeMgrMaster::installRpmPackage(const QString &filename, QString
 }
 
 }//upgrader
-}//service
-}//master
-}//upgrademgr
+}//ummservice

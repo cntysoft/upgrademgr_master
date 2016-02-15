@@ -12,9 +12,7 @@
 #include "corelib/kernel/errorinfo.h"
 #include "corelib/io/filesystem.h"
 
-namespace upgrademgr{
-namespace master{
-namespace service{
+namespace ummservice{
 namespace common{
 
 using ummlib::kernel::StdDir;
@@ -164,6 +162,4 @@ Uploader::~Uploader()
 }
 
 }//common
-}//service
-}//master
-}//upgrademgr
+}//ummservice

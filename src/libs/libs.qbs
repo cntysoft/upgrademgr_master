@@ -3,6 +3,6 @@ Project{
    references: [
       "corelib/corelib.qbs",
       "ummlib/ummlib.qbs",
-      "servicelib/servicelib.qbs"
+      "ummservicelib/servicelib.qbs"
    ]
 }

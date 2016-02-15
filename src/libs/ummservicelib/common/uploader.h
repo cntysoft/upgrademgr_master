@@ -5,14 +5,12 @@
 #include <QString>
 #include <QFile>
 
-#include "macros.h"
+#include "ummservicelib/global_defs.h"
 #include "corelib/network/rpc/abstract_service.h"
 #include "corelib/network/rpc/invoke_meta.h"
 #include "corelib/network/rpc/service_provider.h"
 
-namespace upgrademgr{
-namespace master{
-namespace service{
+namespace ummservice{
 namespace common{
 
 using sn::corelib::network::ServiceInvokeRequest;
@@ -20,7 +18,7 @@ using sn::corelib::network::ServiceInvokeResponse;
 
 UMM_USING_SERVICE_NAMESPACES
 
-class Uploader : public AbstractService
+class UMM_SERVICE_EXPORT Uploader : public AbstractService
 {
    Q_OBJECT
    const static int UPLOAD_STEP_PREPARE = 0;
@@ -56,8 +54,6 @@ protected:
 };
 
 }//common
-}//service
-}//master
-}//upgrademgr
+}//ummservice
 
 #endif // UMM_SERVICE_COMMON_UPLOADER_H

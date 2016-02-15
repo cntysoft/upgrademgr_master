@@ -55,24 +55,6 @@ UpgraderApplication
    }
    
    Group {
-      name: "service"
-      prefix: name+"/"
-      files:[
-         "service_error_code.h",
-         "service_repo.h",
-         "common/uploader.cpp",
-         "common/uploader.h",
-         "macros.h",
-         "repo/repo_info.cpp",
-         "repo/repo_info.h",
-         "serverstatus/server_info.cpp",
-         "serverstatus/server_info.h",
-         "upgrader/upgrade_upgrademgr_master.cpp",
-         "upgrader/upgrade_upgrademgr_master.h",
-      ]
-   }
-   
-   Group {
       name: "initializers"
       prefix: name+"/"
       files:[

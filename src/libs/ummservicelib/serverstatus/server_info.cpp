@@ -1,9 +1,7 @@
 #include "serverstatus/server_info.h"
 #include "ummlib/global/common_funcs.h"
 
-namespace upgrademgr{
-namespace master{
-namespace service{
+namespace ummservice{
 namespace serverstatus{
 
 Info::Info(ServiceProvider &provider)
@@ -20,6 +18,4 @@ ServiceInvokeResponse Info::getVersionInfo(const ServiceInvokeRequest &request)
 }
 
 }//serverstatus
-}//service
-}//master
-}//upgrademgr
+}//ummservice

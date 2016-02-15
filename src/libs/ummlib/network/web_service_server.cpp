@@ -34,7 +34,7 @@ QStringList WebServiceServer::m_requirePackageKeys{
 
 bool WebServiceServer::run()
 {
-   qDebug() << QThread::currentThreadId();
+//   qDebug() << QThread::currentThreadId();
    //暂时简单的监听
    bool ret = listen(m_host, m_port);
    return ret;

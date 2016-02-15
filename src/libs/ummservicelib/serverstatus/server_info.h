@@ -1,19 +1,17 @@
 #ifndef UMM_SERVICE_SERVER_STATUS_INFO_H
 #define UMM_SERVICE_SERVER_STATUS_INFO_H
 
-#include "macros.h"
+#include "ummservicelib/global_defs.h"
 #include "corelib/network/rpc/abstract_service.h"
 #include "corelib/network/rpc/invoke_meta.h"
 #include "corelib/network/rpc/service_provider.h"
 
-namespace upgrademgr{
-namespace master{
-namespace service{
+namespace ummservice{
 namespace serverstatus{
 
 UMM_USING_SERVICE_NAMESPACES
 
-class Info : public AbstractService
+class UMM_SERVICE_EXPORT Info : public AbstractService
 {
    Q_OBJECT
 public:
@@ -22,8 +20,6 @@ public:
 };
 
 }//serverstatus
-}//service
-}//master
-}//upgrademgr
+}//ummservice
 
 #endif // UMM_SERVICE_SERVER_STATUS_INFO_H

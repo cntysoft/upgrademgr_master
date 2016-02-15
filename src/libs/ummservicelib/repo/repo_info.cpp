@@ -1,15 +1,14 @@
 #include <QFileInfo>
 #include <QDataStream>
 #include <QBuffer>
+#include <QVariant>
 
 #include "repo_info.h"
 
 #include "ummlib/kernel/stddir.h"
 #include "corelib/io/filesystem.h"
 
-namespace upgrademgr{
-namespace master{
-namespace service{
+namespace ummservice{
 namespace repo{
 
 using ummlib::kernel::StdDir;
@@ -31,17 +30,12 @@ ServiceInvokeResponse Info::lsSoftwareRepoDir(const ServiceInvokeRequest &reques
    Filesystem::traverseFs(m_dataDir, 1, [&list, baseLength](QFileInfo &fileInfo, int){
       list << fileInfo.absoluteFilePath().remove(0, baseLength);
    });
-   QBuffer buffer;
-   buffer.open(QIODevice::WriteOnly);
-   QDataStream out(&buffer);
-   out << list;
-   ServiceInvokeResponse response("Repo/Info/lsSoftwareRepoDir12", true);
-   response.setExtraData(buffer.data());
+   ServiceInvokeResponse response("Repo/Info/lsSoftwareRepoDir", true);
+   response.setExtraData(encodeJsonObject(QVariant(list)));
    response.setSerial(request.getSerial());
    return response;
 }
 
 }//repo
-}//service
-}//master
-}//upgrademgr
+}//ummservice
+
