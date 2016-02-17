@@ -56,6 +56,7 @@ protected:
    ServiceProvider &m_serviceProvider;
    static QMap<int, QTcpSocket*> m_connections;
    static QStringList m_requirePackageKeys;
+   static int sm_sockIndex;
 };
 
 UMM_LIB_EXPORT WebServiceServer*& get_global_web_service_server();

@@ -27,32 +27,34 @@ Uploader::Uploader(ServiceProvider& provider)
 ServiceInvokeResponse Uploader::init(const ServiceInvokeRequest &request)
 {
    try{
-//      QMap<QString, QVariant> args = request.getArgs();
-//      QString baseDir = args.at(0).toString();
-//      if(baseDir.isEmpty()){
-//         baseDir = StdDir::getSoftwareRepoDir();
-//      }
-//      if(!Filesystem::dirExist(baseDir)){
-//         Filesystem::createPath(baseDir);
-//      }
-//      QString filename = args.at(1).toString();
-//      QFileInfo fileInfo(filename);
-//      filename = baseDir+"/"+fileInfo.fileName();
-//      UploadContext context;
-//      context.baseDir = baseDir;
-//      context.filename = filename;
-//      context.md5 = args.at(2).toString();
-//      context.total = args.at(3).toInt();
-//      context.uploaded = 0;
-//      context.step = UPLOAD_STEP_PREPARE;
-//      context.cycleSize = args.at(4).toInt();
-//      QFile *file = new QFile(filename);
-//      file->open(QIODevice::Truncate | QIODevice::WriteOnly);
-//      context.targetFile = file;
-//      m_context[request.getSocketNum()] = context;
-//      ServiceInvokeResponse response("Common/Uploader/init", true);
-//      response.setSerial(request.getSerial());
-//      return response;
+      QMap<QString, QVariant> args = request.getArgs();
+      QString baseDir;
+      if(!args.contains("baseDir")){
+         baseDir = StdDir::getSoftwareRepoDir();
+      }else{
+         baseDir = args.value("baseDir").toString();
+      }
+      if(!Filesystem::dirExist(baseDir)){
+         Filesystem::createPath(baseDir);
+      }
+      QString filename = args.value("filename").toString();
+      QFileInfo fileInfo(filename);
+      filename = baseDir+"/"+fileInfo.fileName();
+      UploadContext context;
+      context.baseDir = baseDir;
+      context.filename = filename;
+      context.total = args.value("filesize").toInt();
+      context.uploaded = 0;
+      context.step = UPLOAD_STEP_PREPARE;
+      context.cycleSize = args.value("cycleSize").toInt();
+      context.chunkSize = args.value("chunkSize").toInt();
+      QFile *file = new QFile(filename);
+      file->open(QIODevice::Truncate | QIODevice::WriteOnly);
+      context.targetFile = file;
+      m_context[request.getSocketNum()] = context;
+      ServiceInvokeResponse response("Common/Uploader/init", true);
+      response.setSerial(request.getSerial());
+      return response;
    }catch(ErrorInfo errorInfo){
       ServiceInvokeResponse response("Common/Uploader/init", false);
       response.setError({0, errorInfo.toString()});
@@ -64,6 +66,7 @@ ServiceInvokeResponse Uploader::init(const ServiceInvokeRequest &request)
 
 ServiceInvokeResponse Uploader::receiveData(const ServiceInvokeRequest &request)
 {
+   //这个地方是否需要设置一个定时器？
    try{
       UploadContext &context = getContextByRequest(request);
       if(context.step != UPLOAD_STEP_PREPARE && context.step != UPLOAD_STEP_PROCESS){
@@ -71,7 +74,7 @@ ServiceInvokeResponse Uploader::receiveData(const ServiceInvokeRequest &request)
       }
       ServiceInvokeResponse response("Common/Uploader/receiveData", true);
       response.setSerial(request.getSerial());
-      QByteArray unit = QByteArray::fromBase64(request.getExtraData());
+      QByteArray unit = request.getExtraData();
       context.targetFile->write(unit);
       context.uploaded += unit.size();
       context.currentCycle++;
@@ -96,34 +99,22 @@ ServiceInvokeResponse Uploader::receiveData(const ServiceInvokeRequest &request)
    }
 }
 
-ServiceInvokeResponse Uploader::checkUploadResult(const ServiceInvokeRequest &request)
+ServiceInvokeResponse Uploader::notifyUploadComplete(const ServiceInvokeRequest &request)
 {
    UploadContext &context = getContextByRequest(request);
    try{
       if(context.step != UPLOAD_STEP_PROCESS){
          throw ErrorInfo("上下文状态错误");  
       }
-      context.step = UPLOAD_STEP_CHECKSUM;
-      ServiceInvokeResponse response("Common/Uploader/checkUploadResult", true);
+      context.step = UPLOAD_STEP_NOTIFY_UPLOAD_COMPLETE;
+      ServiceInvokeResponse response("Common/Uploader/notifyUploadComplete", true);
       response.setSerial(request.getSerial());
       context.targetFile->close();
-      QFile file(context.filename);
-      file.open(QIODevice::ReadOnly);
-      QByteArray fileContent;
-      while(!file.atEnd()){
-         fileContent.append(file.read(2048));
-      }
-      file.close();
-      QByteArray md5(QCryptographicHash::hash(fileContent, QCryptographicHash::Md5).toHex());
-      if(md5 != context.md5){
-         response.setStatus(false);
-         response.setError({1, "md5校验失败"});
-      }
       context.step = UPLOAD_STEP_FINISH;
       removeContextByRequestSocketId(request.getSocketNum());
       return response;
    }catch(ErrorInfo errorInfo){
-      ServiceInvokeResponse response("Common/Uploader/checkUploadResult", false);
+      ServiceInvokeResponse response("Common/Uploader/notifyUploadComplete", false);
       response.setError({0, errorInfo.toString()});
       response.setSerial(request.getSerial());
       QString filename = context.filename;

@@ -32,6 +32,8 @@ QStringList WebServiceServer::m_requirePackageKeys{
    "name", "method", "serial"
 };
 
+int WebServiceServer::sm_sockIndex = 0;
+
 bool WebServiceServer::run()
 {
 //   qDebug() << QThread::currentThreadId();
@@ -83,13 +85,14 @@ void WebServiceServer::newConnectionHandler()
    //这里暂时不进行加密处理
    //暂时也不进行多线程实现
    QWebSocket *socket = nextPendingConnection();
+   socket->setProperty("socketKeyIndex", getSocketKeyIndex());
    connect(socket, &QWebSocket::binaryMessageReceived, this, &WebServiceServer::unboxRequest);
    connect(socket, &QWebSocket::disconnected, this, &WebServiceServer::socketDisconnectedHandler);
 }
 
 int WebServiceServer::getSocketKeyIndex()
 {
-   return static_cast<int>(std::time(nullptr));
+   return WebServiceServer::sm_sockIndex++;
 }
 
 void WebServiceServer::socketDisconnectedHandler()
@@ -104,12 +107,30 @@ void WebServiceServer::socketDisconnectedHandler()
 void WebServiceServer::unboxRequest(const QByteArray &message)
 {
    QWebSocket *socket = qobject_cast<QWebSocket *>(sender());
-   QByteArray unit = QByteArray::fromBase64(message);
+   int length = message.size();
+   
+   QByteArray meta;
+   QByteArray extraData;
+   int i = 0;
+   int markPos = -1;
+   while(i < length){
+      if(message.at(i) == '\n' && (length - i) >= 2 && message.at(i+1) == '\n' && message.at(i+2) == '\n'){
+         markPos = i;
+         break;
+      }else{
+         meta.append(message.at(i));
+      }
+      i++;
+   }
+   if(-1 != markPos){
+      extraData = message.mid(i+3);
+   }
+   QByteArray unit = QByteArray::fromBase64(meta);
    ServiceInvokeRequest request;
    QJsonParseError parserError;
    request.setIsWebSocket(true);
    ServiceProvider& provider = ServiceProvider::instance();
-   int index = getSocketKeyIndex();
+   int index = socket->property("socketKeyIndex").toInt();
    request.setSocketNum(index);
    provider.setUnderlineSocket(index, socket);
    QJsonDocument jsonDoc = QJsonDocument::fromJson(unit, &parserError);
@@ -130,9 +151,7 @@ void WebServiceServer::unboxRequest(const QByteArray &message)
          request.setName(packageObject.value("name").toString());
          request.setMethod(packageObject.value("method").toString());
          request.setSerial(packageObject.value("serial").toInt());
-         if(packageObject.contains("extraData")){
-            QByteArray extraData;
-            extraData.append(packageObject.value("extraData").toString());
+         if(!extraData.isEmpty()){
             request.setExtraData(extraData);
          }
          if(packageObject.contains("args")){

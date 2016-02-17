@@ -2,6 +2,7 @@
 #include <QDataStream>
 #include <QBuffer>
 #include <QVariant>
+#include <QMap>
 
 #include "repo_info.h"
 
@@ -26,12 +27,16 @@ Info::Info(ServiceProvider &provider)
 ServiceInvokeResponse Info::lsSoftwareRepoDir(const ServiceInvokeRequest &request)
 {
    int baseLength = m_dataDir.size()+1;
-   QStringList list;
-   Filesystem::traverseFs(m_dataDir, 1, [&list, baseLength](QFileInfo &fileInfo, int){
-      list << fileInfo.absoluteFilePath().remove(0, baseLength);
+   QList<QVariant> ret;
+   
+   Filesystem::traverseFs(m_dataDir, 1, [&ret, baseLength](QFileInfo &fileInfo, int){
+      QMap<QString, QVariant> items;
+      items.insert("filename", fileInfo.absoluteFilePath().remove(0, baseLength));
+      items.insert("filesize", fileInfo.size());
+      ret.append(QVariant(items));
    });
    ServiceInvokeResponse response("Repo/Info/lsSoftwareRepoDir", true);
-   response.setExtraData(encodeJsonObject(QVariant(list)));
+   response.setExtraData(encodeJsonObject(QVariant(ret)));
    response.setSerial(request.getSerial());
    return response;
 }

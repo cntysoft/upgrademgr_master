@@ -24,7 +24,7 @@ class UMM_SERVICE_EXPORT Uploader : public AbstractService
    const static int UPLOAD_STEP_PREPARE = 0;
    const static int UPLOAD_STEP_START = 1;
    const static int UPLOAD_STEP_PROCESS = 2;
-   const static int UPLOAD_STEP_CHECKSUM = 3;
+   const static int UPLOAD_STEP_NOTIFY_UPLOAD_COMPLETE = 3;
    const static int UPLOAD_STEP_FINISH = 4;
    
    struct UploadContext
@@ -37,6 +37,7 @@ class UMM_SERVICE_EXPORT Uploader : public AbstractService
       int step = UPLOAD_STEP_PREPARE;
       QFile *targetFile = nullptr;
       int cycleSize = 20;
+      int chunkSize = 2048;
       int currentCycle = 0;
    };
 public:
@@ -44,7 +45,7 @@ public:
    virtual ~Uploader();
    Q_INVOKABLE ServiceInvokeResponse init(const ServiceInvokeRequest &request);
    Q_INVOKABLE ServiceInvokeResponse receiveData(const ServiceInvokeRequest &request);
-   Q_INVOKABLE ServiceInvokeResponse checkUploadResult(const ServiceInvokeRequest &request);
+   Q_INVOKABLE ServiceInvokeResponse notifyUploadComplete(const ServiceInvokeRequest &request);
 protected:
    UploadContext& getContextByRequest(const ServiceInvokeRequest &request);
    Uploader& removeContextByRequestSocketId(int sid);
