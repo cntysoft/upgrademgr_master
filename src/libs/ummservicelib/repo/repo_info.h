@@ -17,7 +17,7 @@ class UMM_SERVICE_EXPORT Info : public AbstractService
 public:
    Info(ServiceProvider& provider);
    Q_INVOKABLE ServiceInvokeResponse lsSoftwareRepoDir(const ServiceInvokeRequest &request);
-   //Q_INVOKABLE ServiceInvokeResponse removeSoftware(const ServiceInvokeRequest &request);
+   Q_INVOKABLE ServiceInvokeResponse removeSoftware(const ServiceInvokeRequest &request);
 protected:
    QString m_dataDir;
 };

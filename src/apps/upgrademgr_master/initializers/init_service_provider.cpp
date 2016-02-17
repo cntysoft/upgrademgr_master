@@ -16,9 +16,9 @@ void init_service_provider()
    provider.addServiceToPool("Repo/Info", [](ServiceProvider& provider)-> AbstractService*{
                             return new ummservice::repo::Info(provider);
                          });
-//   provider.addServiceToPool("ServerStatus/Info", [](ServiceProvider& provider)-> AbstractService*{
-//                            return new upgrademgr::master::service::serverstatus::Info(provider);
-//                         });
+   provider.addServiceToPool("ServerStatus/Info", [](ServiceProvider& provider)-> AbstractService*{
+                            return new ummservice::serverstatus::Info(provider);
+                         });
    provider.addServiceToPool("Common/Uploader", [](ServiceProvider& provider)-> AbstractService*{
                             return new ummservice::common::Uploader(provider);
                          });

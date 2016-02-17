@@ -3,6 +3,7 @@
 #include <QBuffer>
 #include <QVariant>
 #include <QMap>
+#include <QDebug>
 
 #include "repo_info.h"
 
@@ -40,6 +41,18 @@ ServiceInvokeResponse Info::lsSoftwareRepoDir(const ServiceInvokeRequest &reques
    response.setSerial(request.getSerial());
    return response;
 }
+
+ServiceInvokeResponse Info::removeSoftware(const ServiceInvokeRequest &request)
+{
+   QString filename = m_dataDir + QDir::separator() + request.getArg("filename").toString();
+   if(Filesystem::fileExist(filename)){
+      Filesystem::deleteFile(filename);
+   }
+   ServiceInvokeResponse response("Repo/Info/removeSoftware", true);
+   response.setSerial(request.getSerial());
+   return response;
+}
+
 
 }//repo
 }//ummservice
