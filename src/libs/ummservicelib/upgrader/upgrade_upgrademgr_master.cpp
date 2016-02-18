@@ -68,6 +68,7 @@ ServiceInvokeResponse UpgradeUpgradeMgrMaster::upgrade(const ServiceInvokeReques
 //   }
 //   Application::instance()->exit(1);
 //   return response;
+   return ServiceInvokeResponse();
 }
 
 int UpgradeUpgradeMgrMaster::versionCompare(const QString &version1, const QString &version2)

@@ -17,6 +17,7 @@ class UMM_SERVICE_EXPORT Info : public AbstractService
 public:
    Info(ServiceProvider& provider);
    Q_INVOKABLE ServiceInvokeResponse getVersionInfo(const ServiceInvokeRequest &request);
+   Q_INVOKABLE ServiceInvokeResponse setServiceServerAddressMeta(const ServiceInvokeRequest &request);
 };
 
 }//serverstatus

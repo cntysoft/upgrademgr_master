@@ -2,6 +2,6 @@
 #define UMM_LIB_GLOBAL_CONST_H
 
 #define UMM_CFG_GROUP_GLOBAL "Global"
-#define UMM_LISTEN_PORT 7777
+#define UMM_LISTEN_PORT 7760
 
 #endif // UMM_LIB_GLOBAL_CONST_H
