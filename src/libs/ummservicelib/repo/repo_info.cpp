@@ -53,7 +53,6 @@ ServiceInvokeResponse Info::removeSoftware(const ServiceInvokeRequest &request)
    return response;
 }
 
-
 }//repo
 }//ummservice
 

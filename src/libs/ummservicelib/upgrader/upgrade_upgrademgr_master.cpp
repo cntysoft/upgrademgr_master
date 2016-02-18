@@ -25,7 +25,7 @@ UpgradeUpgradeMgrMaster::UpgradeUpgradeMgrMaster(sn::corelib::network::ServicePr
 {
 }
 
-ServiceInvokeResponse UpgradeUpgradeMgrMaster::upgrade(const ServiceInvokeRequest &request)
+ServiceInvokeResponse UpgradeUpgradeMgrMaster::upgrade(const ServiceInvokeRequest &)
 {
 //   QList<QVariant> requestParams = request.getArgs();
 //   QString targetVersion = requestParams.takeLast().toString();
