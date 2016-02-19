@@ -1,15 +1,13 @@
 #include <QTimer>
 #include <csignal>
-#include <QtWebSockets/QWebSocketServer>
 
 #include "corelib/io/terminal.h"
 #include "corelib/kernel/errorinfo.h"
 
 #include "application.h"
 #include "command_runner.h"
-#include <QDebug>
 
-using CloudControllerApplication = upgrademgr::master::Application;
+using UpgrademgrMasterApplication = upgrademgr::master::Application;
 using CommandRunner = upgrademgr::master::CommandRunner;
 using ErrorInfo = sn::corelib::ErrorInfo;
 using Terminal = sn::corelib::Terminal;
