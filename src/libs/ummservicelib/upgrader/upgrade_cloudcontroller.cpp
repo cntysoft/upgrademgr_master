@@ -47,13 +47,13 @@ ServiceInvokeResponse UpgradeCloudControllerWrapper::upgrade(const ServiceInvoke
    writeInterResponse(request, response);
    response.setDataItem("msg", "正在连接更新服务器");
    writeInterResponse(request, response);
-   QSharedPointer<ServiceInvoker> invoker = getServiceInvoker(meta.value("ip"), UPGRADEMGR_SLAVE_LISTEN_PORT);
+   QSharedPointer<ServiceInvoker> invoker = getServiceInvoker(meta.value("ip"), UMS_LISTEN_PORT);
    connect(invoker.data(), &ServiceInvoker::connectedToServerSignal, this, [&](){
-      response.setDataItem("msg", QString("连接服务器成功 [%1:%2]").arg(meta.value("ip")).arg(UPGRADEMGR_SLAVE_LISTEN_PORT));
+      response.setDataItem("msg", QString("连接服务器成功 [%1:%2]").arg(meta.value("ip")).arg(UMS_LISTEN_PORT));
       writeInterResponse(request, response);
    }, Qt::DirectConnection);
    connect(invoker.data(), &ServiceInvoker::connectErrorSignal, this, [&](const QString&){
-      response.setDataItem("msg", QString("连接服务器失败 [%1:%2]").arg(meta.value("ip")).arg(UPGRADEMGR_SLAVE_LISTEN_PORT));
+      response.setDataItem("msg", QString("连接服务器失败 [%1:%2]").arg(meta.value("ip")).arg(UMS_LISTEN_PORT));
       writeInterResponse(request, response);
    });
    invoker->connectToServer();
