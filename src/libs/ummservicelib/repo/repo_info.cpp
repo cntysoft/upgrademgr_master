@@ -16,7 +16,7 @@ namespace repo{
 using ummlib::kernel::StdDir;
 using sn::corelib::Filesystem;
 
-Info::Info(ServiceProvider &provider)
+InfoWrapper::InfoWrapper(ServiceProvider &provider)
    : AbstractService(provider),
      m_dataDir(StdDir::getBaseDataDir()+"/softwarerepo")
 {
@@ -25,11 +25,10 @@ Info::Info(ServiceProvider &provider)
    }
 }
 
-ServiceInvokeResponse Info::lsSoftwareRepoDir(const ServiceInvokeRequest &request)
+ServiceInvokeResponse InfoWrapper::lsSoftwareRepoDir(const ServiceInvokeRequest &request)
 {
    int baseLength = m_dataDir.size()+1;
    QList<QVariant> ret;
-   
    Filesystem::traverseFs(m_dataDir, 1, [&ret, baseLength](QFileInfo &fileInfo, int){
       QMap<QString, QVariant> items;
       items.insert("filename", fileInfo.absoluteFilePath().remove(0, baseLength));
@@ -39,10 +38,11 @@ ServiceInvokeResponse Info::lsSoftwareRepoDir(const ServiceInvokeRequest &reques
    ServiceInvokeResponse response("Repo/Info/lsSoftwareRepoDir", true);
    response.setExtraData(encodeJsonObject(QVariant(ret)));
    response.setSerial(request.getSerial());
+   response.setIsFinal(true);
    return response;
 }
 
-ServiceInvokeResponse Info::removeSoftware(const ServiceInvokeRequest &request)
+ServiceInvokeResponse InfoWrapper::removeSoftware(const ServiceInvokeRequest &request)
 {
    QString filename = m_dataDir + QDir::separator() + request.getArg("filename").toString();
    if(Filesystem::fileExist(filename)){
@@ -50,6 +50,7 @@ ServiceInvokeResponse Info::removeSoftware(const ServiceInvokeRequest &request)
    }
    ServiceInvokeResponse response("Repo/Info/removeSoftware", true);
    response.setSerial(request.getSerial());
+   response.setIsFinal(true);
    return response;
 }
 

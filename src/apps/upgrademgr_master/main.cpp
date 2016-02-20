@@ -23,7 +23,7 @@ void global_cleanup();
 int main(int argc, char *argv[])
 {
    try{
-      CloudControllerApplication app(argc, argv);
+      UpgrademgrMasterApplication app(argc, argv);
       qAddPreRoutine(upgrademgr::master::global_initializer);
       qAddPostRoutine(upgrademgr::master::global_cleanup);
       app.ensureImportantDir();

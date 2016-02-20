@@ -32,7 +32,7 @@ QStringList WebServiceServer::m_requirePackageKeys{
    "name", "method", "serial"
 };
 
-int WebServiceServer::sm_sockIndex = 0;
+int WebServiceServer::sm_sockIndex = 1000;
 
 bool WebServiceServer::run()
 {
@@ -85,7 +85,10 @@ void WebServiceServer::newConnectionHandler()
    //这里暂时不进行加密处理
    //暂时也不进行多线程实现
    QWebSocket *socket = nextPendingConnection();
-   socket->setProperty("socketKeyIndex", getSocketKeyIndex());
+   int index = getSocketKeyIndex();
+   socket->setProperty("socketKeyIndex", index);
+   ServiceProvider& provider = ServiceProvider::instance();
+   provider.setUnderlineSocket(index, socket);
    connect(socket, &QWebSocket::binaryMessageReceived, this, &WebServiceServer::unboxRequest);
    connect(socket, &QWebSocket::disconnected, this, &WebServiceServer::socketDisconnectedHandler);
 }
@@ -99,6 +102,7 @@ void WebServiceServer::socketDisconnectedHandler()
 {
    QWebSocket *socket = qobject_cast<QWebSocket *>(sender());
    qDebug() << "disconnected";
+   
    if (socket) {
       socket->deleteLater();
    }

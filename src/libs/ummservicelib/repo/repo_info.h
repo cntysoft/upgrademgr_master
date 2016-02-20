@@ -11,11 +11,11 @@ namespace repo{
 
 UMM_USING_SERVICE_NAMESPACES
 
-class UMM_SERVICE_EXPORT Info : public AbstractService
+class UMM_SERVICE_EXPORT InfoWrapper : public AbstractService
 {
    Q_OBJECT
 public:
-   Info(ServiceProvider& provider);
+   InfoWrapper(ServiceProvider& provider);
    Q_INVOKABLE ServiceInvokeResponse lsSoftwareRepoDir(const ServiceInvokeRequest &request);
    Q_INVOKABLE ServiceInvokeResponse removeSoftware(const ServiceInvokeRequest &request);
 protected:

@@ -1,59 +1,73 @@
-#include <QMap>
 #include <QString>
-#include <QVariant>
+#include <QJsonDocument>
+#include <QByteArray>
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QJsonParseError>
 
-#include "serverstatus/server_info.h"
-#include "ummlib/global/common_funcs.h"
+#include "server_info.h"
+#include "io/filesystem.h"
 #include "ummlib/kernel/stddir.h"
-#include "corelib/io/filesystem.h"
 
 namespace ummservice{
 namespace serverstatus{
 
-using ummlib::kernel::StdDir;
 using sn::corelib::Filesystem;
-
-Info::Info(ServiceProvider &provider)
-   : AbstractService(provider)
-{
-}
-
-ServiceInvokeResponse Info::getVersionInfo(const ServiceInvokeRequest &request)
-{
-   ServiceInvokeResponse response("ServerStatus/Info/getVersionInfo", true);
-   response.setSerial(request.getSerial());
-   response.setDataItem("version", ummlib::global::get_upgrademgr_master_version());
-   return response;
-}
-
-
-ServiceInvokeResponse Info::setServiceServerAddressMeta(const ServiceInvokeRequest &request)
-{
-   const QMap<QString, QVariant> args = request.getArgs();
-   checkRequireFields(args, {"servers"});
-   ServiceInvokeResponse response("ServerStatus/Info/setServiceServerAddressMeta", true);
-   response.setSerial(request.getSerial());
-   QString jsonStr(encodeJsonObject(args.value("servers")));
-   Filesystem::filePutContents(getAddressMetaFilename(), jsonStr);
-   return response;
-}
-
-ServiceInvokeResponse Info::getServiceServerAddressMeta(const ServiceInvokeRequest &request)
-{
-   ServiceInvokeResponse response("ServerStatus/Info/getServiceServerAddressMeta", true);
-   response.setSerial(request.getSerial());
-   QString metaFilename = getAddressMetaFilename();
-   if(!Filesystem::fileExist(metaFilename)){
-      response.setExtraData(QByteArray("[]"));
-   }else{
-      response.setExtraData(QByteArray().append(Filesystem::fileGetContents(metaFilename)));
-   }
-   return response;
-}
+using ummlib::kernel::StdDir;
 
 QString Info::getAddressMetaFilename()const
 {
    return StdDir::getMetaDir() + '/' + "ServerAddress.json";
+}
+
+Info& Info::setServiceServerAddressMeta(const QVariant &data)
+{
+   QJsonDocument doc = QJsonDocument::fromVariant(data);
+   Filesystem::filePutContents(getAddressMetaFilename(), doc.toJson());
+   return *this;
+}
+
+QMap<QString, QMap<QString, QString>> Info::getServiceServerAddressMeta()
+{
+   QString filename = getAddressMetaFilename();
+   QByteArray json("[]");
+   if(Filesystem::fileExist(filename)){
+      json = Filesystem::fileGetContents(filename);
+   }
+   QJsonParseError parserError;
+   QJsonDocument doc = QJsonDocument::fromJson(json, &parserError);
+   QMap<QString, QMap<QString, QString>> ret;
+   if(parserError.error == QJsonParseError::NoError){
+      QJsonArray array = doc.array();
+      QJsonArray::const_iterator ait = array.constBegin();
+      QJsonArray::const_iterator aendmarker = array.constEnd();
+      while(ait != aendmarker){
+         QJsonValue v = *ait;
+         if(v.isObject()){
+            QJsonObject item = v.toObject();
+            QJsonObject::const_iterator oit = item.constBegin();
+            QJsonObject::const_iterator oendmarker = item.constEnd();
+            QMap<QString, QString> dataItem;
+            while(oit != oendmarker){
+               dataItem.insert(oit.key(), oit.value().toString());
+               oit++;
+            }
+            ret.insert(dataItem.value("key"), dataItem);
+         }
+         ait++;
+      }
+   }
+   return ret;
+}
+
+QMap<QString, QString> Info::getServiceServerAddressMetaByKey(const QString &key)
+{
+   QMap<QString, QMap<QString, QString>> pool = getServiceServerAddressMeta();
+   if(!pool.contains(key)){
+      return QMap<QString, QString>();
+   }else{
+      return pool.value(key);
+   }
 }
 
 }//serverstatus

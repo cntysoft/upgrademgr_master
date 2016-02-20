@@ -19,12 +19,12 @@ using ummlib::kernel::StdDir;
 using sn::corelib::ErrorInfo;
 using sn::corelib::Filesystem;
 
-Uploader::Uploader(ServiceProvider& provider)
+UploaderWrapper::UploaderWrapper(ServiceProvider& provider)
    : AbstractService(provider)
 {
 }
 
-ServiceInvokeResponse Uploader::init(const ServiceInvokeRequest &request)
+ServiceInvokeResponse UploaderWrapper::init(const ServiceInvokeRequest &request)
 {
    try{
       QMap<QString, QVariant> args = request.getArgs();
@@ -54,17 +54,19 @@ ServiceInvokeResponse Uploader::init(const ServiceInvokeRequest &request)
       m_context[request.getSocketNum()] = context;
       ServiceInvokeResponse response("Common/Uploader/init", true);
       response.setSerial(request.getSerial());
+      response.setIsFinal(true);
       return response;
    }catch(ErrorInfo errorInfo){
       ServiceInvokeResponse response("Common/Uploader/init", false);
       response.setError({0, errorInfo.toString()});
       response.setSerial(request.getSerial());
       removeContextByRequestSocketId(request.getSocketNum());
+      response.setIsFinal(true);
       return response;
    }
 }
 
-ServiceInvokeResponse Uploader::receiveData(const ServiceInvokeRequest &request)
+ServiceInvokeResponse UploaderWrapper::receiveData(const ServiceInvokeRequest &request)
 {
    //这个地方是否需要设置一个定时器？
    try{
@@ -89,17 +91,19 @@ ServiceInvokeResponse Uploader::receiveData(const ServiceInvokeRequest &request)
       }
       context.step = UPLOAD_STEP_PROCESS;
       response.setData(data);
+      response.setIsFinal(true);
       return response;
    }catch(ErrorInfo errorInfo){
       ServiceInvokeResponse response("Common/Uploader/receiveData", false);
       response.setError({0, errorInfo.toString()});
       response.setSerial(request.getSerial());
       removeContextByRequestSocketId(request.getSocketNum());
+      response.setIsFinal(true);
       return response;
    }
 }
 
-ServiceInvokeResponse Uploader::notifyUploadComplete(const ServiceInvokeRequest &request)
+ServiceInvokeResponse UploaderWrapper::notifyUploadComplete(const ServiceInvokeRequest &request)
 {
    UploadContext &context = getContextByRequest(request);
    try{
@@ -122,17 +126,18 @@ ServiceInvokeResponse Uploader::notifyUploadComplete(const ServiceInvokeRequest 
          Filesystem::deleteFile(filename);
       }
       removeContextByRequestSocketId(request.getSocketNum());
+      response.setIsFinal(true);
       return response;
    }
 }
 
-Uploader::UploadContext& Uploader::getContextByRequest(const ServiceInvokeRequest &request)
+UploaderWrapper::UploadContext& UploaderWrapper::getContextByRequest(const ServiceInvokeRequest &request)
 {
    Q_ASSERT_X(m_context.contains(request.getSocketNum()), "Uploader::getContextByRequest", "upload context is not exist");
    return m_context[request.getSocketNum()];
 }
 
-Uploader& Uploader::removeContextByRequestSocketId(int sid)
+UploaderWrapper& UploaderWrapper::removeContextByRequestSocketId(int sid)
 {
    if(m_context.contains(sid)){
       UploadContext context = m_context.value(sid);
@@ -144,7 +149,7 @@ Uploader& Uploader::removeContextByRequestSocketId(int sid)
    return *this;
 }
 
-Uploader::~Uploader()
+UploaderWrapper::~UploaderWrapper()
 {
    QMap<int, UploadContext>::const_iterator it = m_context.cbegin();
    while(it != m_context.cend()){

@@ -18,6 +18,10 @@ Product
       }else{
          defines.push("UMM_LIBRARY");
       }
+      if(project.autotestBuild){
+         defines.push("AUTOTEST_BUILD");
+      }
+
       defines = defines.concat([
                                   'UMM_LIB_VERSION="'+ version+'"',
                                   'UMM_MASTER_VERSION="' + project.upgrademgrMasterversion+'"'

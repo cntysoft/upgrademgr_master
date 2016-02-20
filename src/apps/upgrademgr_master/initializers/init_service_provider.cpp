@@ -14,17 +14,17 @@ void init_service_provider()
 {
    ServiceProvider& provider = ServiceProvider::instance();
    provider.addServiceToPool("Repo/Info", [](ServiceProvider& provider)-> AbstractService*{
-                            return new ummservice::repo::Info(provider);
+                            return new ummservice::repo::InfoWrapper(provider);
                          });
    provider.addServiceToPool("ServerStatus/Info", [](ServiceProvider& provider)-> AbstractService*{
-                            return new ummservice::serverstatus::Info(provider);
+                            return new ummservice::serverstatus::InfoWrapper(provider);
                          });
    provider.addServiceToPool("Common/Uploader", [](ServiceProvider& provider)-> AbstractService*{
-                            return new ummservice::common::Uploader(provider);
+                            return new ummservice::common::UploaderWrapper(provider);
                          });
-//   provider.addServiceToPool("Upgrader/UpgradeUpgrademgrMaster", [](ServiceProvider& provider)-> AbstractService*{
-//                            return new upgrademgr::master::service::upgrader::UpgradeUpgradeMgrMaster(provider);
-//                         });
+   provider.addServiceToPool("Upgrader/UpgradeCloudController", [](ServiceProvider& provider)-> AbstractService*{
+                            return new ummservice::upgrader::UpgradeCloudControllerWrapper(provider);
+                         });
 }
 
 void cleanup_service_provider()

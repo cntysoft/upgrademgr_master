@@ -12,8 +12,12 @@ QString StdDir::getBaseDataDir()
 {
    static QString dir;
    if(dir.isEmpty()){
+#ifdef AUTOTEST_BUILD
+      dir = "/cntysoft/upgrademgr";
+#else
       Settings& settings = Application::instance()->getSettings();
       dir = settings.getValue("baseDataDir", UMM_CFG_GROUP_GLOBAL, "/cntysoft/upgrademgr").toString();
+#endif
    }
    return dir;
 }

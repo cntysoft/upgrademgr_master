@@ -13,4 +13,6 @@
    #endif
 #endif
 
+#define UPGRADEMGR_SLAVE_LISTEN_PORT 7770
+
 #endif // UMM_LIB_GLOBAL_GLOBAL_H

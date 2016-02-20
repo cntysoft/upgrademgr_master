@@ -18,7 +18,7 @@ using sn::corelib::network::ServiceInvokeResponse;
 
 UMM_USING_SERVICE_NAMESPACES
 
-class UMM_SERVICE_EXPORT Uploader : public AbstractService
+class UMM_SERVICE_EXPORT UploaderWrapper : public AbstractService
 {
    Q_OBJECT
    const static int UPLOAD_STEP_PREPARE = 0;
@@ -41,14 +41,14 @@ class UMM_SERVICE_EXPORT Uploader : public AbstractService
       int currentCycle = 0;
    };
 public:
-   Uploader(ServiceProvider& provider);
-   virtual ~Uploader();
+   UploaderWrapper(ServiceProvider& provider);
+   virtual ~UploaderWrapper();
    Q_INVOKABLE ServiceInvokeResponse init(const ServiceInvokeRequest &request);
    Q_INVOKABLE ServiceInvokeResponse receiveData(const ServiceInvokeRequest &request);
    Q_INVOKABLE ServiceInvokeResponse notifyUploadComplete(const ServiceInvokeRequest &request);
 protected:
    UploadContext& getContextByRequest(const ServiceInvokeRequest &request);
-   Uploader& removeContextByRequestSocketId(int sid);
+   UploaderWrapper& removeContextByRequestSocketId(int sid);
 protected:
    QMap<int, UploadContext> m_context;
    quint64 m_total = 0;
