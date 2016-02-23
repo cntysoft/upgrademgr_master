@@ -2,11 +2,13 @@
 
 #include "ummlib/global/const.h"
 #include "corelib/kernel/settings.h"
+#include "corelib/kernel/application.h"
 
 namespace ummlib{
 namespace kernel{
 
 using sn::corelib::Settings;
+using sn::corelib::Application;
 
 QString StdDir::getBaseDataDir()
 {

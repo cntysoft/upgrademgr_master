@@ -17,8 +17,6 @@ public:
    StartServerCommand(AbstractCommandRunner& runner, const CommandMeta& invokeMeta);
 public:
    virtual void exec();
-protected:
-   qint16 getMetaServerListenPort();
 };
 
 }//command

@@ -36,10 +36,6 @@ StartServerCommand::StartServerCommand(AbstractCommandRunner& runner, const Comm
 
 void StartServerCommand::exec()
 {
-   qint16 port = getMetaServerListenPort();
-   if(0 == port){
-      throw ErrorInfo(QString("port %1 is not allow").arg(port));
-   }
    bool daemon = m_invokeMeta.getCmdArgs().value("daemon") == "true" ? true : false;
    Application& app = *get_app_ref();
    if(daemon){
@@ -57,10 +53,10 @@ void StartServerCommand::exec()
    ummlib::network::set_global_server(server);
    ummlib::network::set_global_web_service_server(webServiceServer);
    server->setHost(QHostAddress::Any);
-   server->setPort(port);
+   server->setPort(UMM_LISTEN_PORT);
    
    webServiceServer->setHost(QHostAddress::Any);
-   webServiceServer->setPort(port + 1);
+   webServiceServer->setPort(UMM_LISTEN_PORT + 1);
    app.createPidFile();
    bool status = server->run();
    bool webServiceStatus = webServiceServer->run();
@@ -84,27 +80,6 @@ void StartServerCommand::exec()
    }
 }
 
-qint16 StartServerCommand::getMetaServerListenPort()
-{
-   //优先级 命令行 > 配置文件 > 系统常量定义
-   qint16 port;
-   const CommandMeta::CmdArgType& args = m_invokeMeta.getCmdArgs();
-   if(args.contains("port")){
-      port = args.value("port").toInt();
-      if(0 != port){
-         return port;
-      }
-   }
-   Settings& settings = m_cmdRunner.getSysSettings();
-   if(settings.hasKey("listenPort")){
-      port = settings.getValue("listenPort", UMM_CFG_GROUP_GLOBAL).toInt();
-      if(0 != port){
-         return port;
-      }
-   }
-   port = UMM_LISTEN_PORT;
-   return port;
-}
 
 }//command
 }//master

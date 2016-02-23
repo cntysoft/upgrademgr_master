@@ -1,7 +1,7 @@
 import qbs
 Project
 {
-   name: "corelibtestproject"
+   name: "ummservicelibtestproject"
    minimumQbsVersion: "1.4.2"
    qbsSearchPaths:["tests/qbs-resources"]
    autotestBuild : true

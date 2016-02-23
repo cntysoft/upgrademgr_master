@@ -40,19 +40,21 @@ Product
       qbs.installDir: "lib"
    }
    files:[
+        "common/download_server.h",
+        "common/download_server_warpper.cpp",
+        "common/uploader_wrapper.cpp",
         "global_defs.h",
         "serverstatus/server_info.cpp",
         "serverstatus/server_info_wrapper.cpp",
         "service_error_code.h",
         "service_repo.h",
-        "common/uploader.cpp",
         "common/uploader.h",
         "macros.h",
         "repo/repo_info.cpp",
         "repo/repo_info.h",
         "serverstatus/server_info.h",
-        "upgrader/upgrade_cloudcontroller.cpp",
         "upgrader/upgrade_cloudcontroller.h",
+        "upgrader/upgrade_cloudcontroller_wrapper.cpp",
         "upgrader/upgrade_upgrademgr_master.cpp",
         "upgrader/upgrade_upgrademgr_master.h",
     ]

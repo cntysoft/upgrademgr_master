@@ -1,5 +1,5 @@
-#ifndef UMS_SERVICE_UPGRADE_CLOUDCONTROLLER_H
-#define UMS_SERVICE_UPGRADE_CLOUDCONTROLLER_H
+#ifndef UMM_SERVICE_UPGRADE_CLOUDCONTROLLER_H
+#define UMM_SERVICE_UPGRADE_CLOUDCONTROLLER_H
 
 #include <QString>
 
@@ -16,11 +16,14 @@ UMM_USING_SERVICE_NAMESPACES
 class UMM_SERVICE_EXPORT UpgradeCloudControllerWrapper : public AbstractService
 {
    Q_OBJECT
+   friend void init_upgrade_handler(const ServiceInvokeResponse &response, void* args);
 public:
    struct UpgradeContext
    {
       ServiceInvokeRequest request;
       ServiceInvokeResponse response;
+      QString fromVersion;
+      QString toVersion;
    };
 public:
    UpgradeCloudControllerWrapper(ServiceProvider& provider);
@@ -35,4 +38,4 @@ protected:
 }//upgrader
 }//ummservice
 
-#endif // UMS_SERVICE_UPGRADE_CLOUDCONTROLLER_H
+#endif // UMM_SERVICE_UPGRADE_CLOUDCONTROLLER_H

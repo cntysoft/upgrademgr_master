@@ -12,7 +12,7 @@ namespace ummlib{
 namespace kernel{
 
 using BaseStdDir = sn::corelib::StdDir;
-using sn::corelib::Application;
+
 
 class UMM_LIB_EXPORT StdDir : public BaseStdDir
 {
