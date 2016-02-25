@@ -2,6 +2,7 @@
 #define UMM_SERVICE_COMMON_DOWNLOAD_SERVER_H
 
 #include <QFile>
+#include <QSharedPointer>
 
 #include "ummservicelib/global_defs.h"
 #include "corelib/network/rpc/abstract_service.h"
@@ -33,19 +34,22 @@ class UMM_SERVICE_EXPORT DownloadWrapper : public AbstractService
       QString filename;
       int step = DOWNLOAD_STEP_PREPARE;
       QFile *targetFile = nullptr;
+      int sentSize = 0;
    };
 public:
    DownloadWrapper(ServiceProvider& provider);
    virtual ~DownloadWrapper();
    Q_INVOKABLE ServiceInvokeResponse init(const ServiceInvokeRequest &request);
+   Q_INVOKABLE ServiceInvokeResponse sendData(const ServiceInvokeRequest &request);
+   Q_INVOKABLE ServiceInvokeResponse notifyComplete(const ServiceInvokeRequest &request);
+   Q_INVOKABLE ServiceInvokeResponse terminal(const ServiceInvokeRequest &request);
 protected:
-   DownloadContext& getContextByRequest(const ServiceInvokeRequest &request);
+   bool hasContextByRequest(const ServiceInvokeRequest &request);
+   QSharedPointer<DownloadContext> getContextByRequest(const ServiceInvokeRequest &request);
    DownloadWrapper& removeContextByRequestSocketId(int sid);
 protected:
-   QMap<int, DownloadContext> m_contextPool;
-   int m_cycleSize = 20;
-   int m_chunkSize = 2048;
-   int m_currentCycle = 0;
+   QMap<int, QSharedPointer<DownloadContext>> m_contextPool;
+   int m_chunkSize = 1024 * 2;
    QString m_baseDir;
 };
 
