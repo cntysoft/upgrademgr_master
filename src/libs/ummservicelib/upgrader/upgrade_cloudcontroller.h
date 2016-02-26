@@ -28,6 +28,7 @@ public:
 public:
    UpgradeCloudControllerWrapper(ServiceProvider& provider);
    Q_INVOKABLE ServiceInvokeResponse upgrade(const ServiceInvokeRequest &request);
+   
 //protected:
 //   virtual void notifySocketDisconnect(QWebSocket *socket);
 protected:

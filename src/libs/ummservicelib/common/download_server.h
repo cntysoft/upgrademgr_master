@@ -17,7 +17,7 @@ using sn::corelib::network::ServiceInvokeResponse;
 
 UMM_USING_SERVICE_NAMESPACES
 
-class UMM_SERVICE_EXPORT DownloadWrapper : public AbstractService
+class UMM_SERVICE_EXPORT DownloadServerWrapper : public AbstractService
 {
    Q_OBJECT
    const static int E_FILE_NOT_EXIST;
@@ -37,8 +37,8 @@ class UMM_SERVICE_EXPORT DownloadWrapper : public AbstractService
       int sentSize = 0;
    };
 public:
-   DownloadWrapper(ServiceProvider& provider);
-   virtual ~DownloadWrapper();
+   DownloadServerWrapper(ServiceProvider& provider);
+   virtual ~DownloadServerWrapper();
    Q_INVOKABLE ServiceInvokeResponse init(const ServiceInvokeRequest &request);
    Q_INVOKABLE ServiceInvokeResponse sendData(const ServiceInvokeRequest &request);
    Q_INVOKABLE ServiceInvokeResponse notifyComplete(const ServiceInvokeRequest &request);
@@ -46,7 +46,11 @@ public:
 protected:
    bool hasContextByRequest(const ServiceInvokeRequest &request);
    QSharedPointer<DownloadContext> getContextByRequest(const ServiceInvokeRequest &request);
-   DownloadWrapper& removeContextByRequestSocketId(int sid);
+   DownloadServerWrapper& removeContextByRequestSocketId(int sid);
+   void clearState(const ServiceInvokeRequest &request);
+   void clearState(int sid);
+protected:
+   virtual void notifySocketDisconnect(QTcpSocket *socket);
 protected:
    QMap<int, QSharedPointer<DownloadContext>> m_contextPool;
    int m_chunkSize = 1024 * 2;

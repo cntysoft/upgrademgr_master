@@ -77,7 +77,7 @@ ServiceInvokeResponse UpgradeCloudControllerWrapper::upgrade(const ServiceInvoke
       writeInterResponse(request, response);
       response.setDataItem("msg", "向upgrademgr_slave服务器发送升级请求");
       writeInterResponse(request, response);
-      ServiceInvokeRequest serviceRequest("Upgrade/UpgradeCloudController", "init", args);
+      ServiceInvokeRequest serviceRequest("Upgrade/UpgradeCloudController", "upgrade", args);
       invoker->request(serviceRequest, init_upgrade_handler, static_cast<void*>(this));
    });
    connect(invoker.data(), &ServiceInvoker::connectErrorSignal, this, [&](const QString&){

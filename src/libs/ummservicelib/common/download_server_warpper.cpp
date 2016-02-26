@@ -17,16 +17,16 @@ using sn::corelib::Filesystem;
 using sn::corelib::ErrorInfo;
 using sn::corelib::throw_exception;
 
-const int DownloadWrapper::E_FILE_NOT_EXIST = 10001;
-const int DownloadWrapper::E_FILE_CANOT_OPEN = 10002;
+const int DownloadServerWrapper::E_FILE_NOT_EXIST = 10001;
+const int DownloadServerWrapper::E_FILE_CANOT_OPEN = 10002;
 
 //暂时只能从软件库下载
-DownloadWrapper::DownloadWrapper(ServiceProvider &provider)
+DownloadServerWrapper::DownloadServerWrapper(ServiceProvider &provider)
    : AbstractService(provider),
      m_baseDir(StdDir::getSoftwareRepoDir())
 {}
 
-ServiceInvokeResponse DownloadWrapper::init(const ServiceInvokeRequest &request)
+ServiceInvokeResponse DownloadServerWrapper::init(const ServiceInvokeRequest &request)
 {
    if(hasContextByRequest(request)){
       QSharedPointer<DownloadContext> context = getContextByRequest(request);
@@ -37,7 +37,7 @@ ServiceInvokeResponse DownloadWrapper::init(const ServiceInvokeRequest &request)
    QMap<QString, QVariant> args = request.getArgs();
    checkRequireFields(args, {"filename"});
    QString filename(StdDir::getSoftwareRepoDir()+'/'+args.value("filename").toString());
-   ServiceInvokeResponse response("Common/Download/init", true);
+   ServiceInvokeResponse response("Common/DownloadServer/init", true);
    response.setSerial(request.getSerial());
    if(!Filesystem::fileExist(filename)){
       response.setStatus(false);
@@ -65,7 +65,7 @@ ServiceInvokeResponse DownloadWrapper::init(const ServiceInvokeRequest &request)
    return response;
 }
 
-ServiceInvokeResponse DownloadWrapper::sendData(const ServiceInvokeRequest &request)
+ServiceInvokeResponse DownloadServerWrapper::sendData(const ServiceInvokeRequest &request)
 {
    bool stateOk = true;
    QSharedPointer<DownloadContext> context;
@@ -88,48 +88,83 @@ ServiceInvokeResponse DownloadWrapper::sendData(const ServiceInvokeRequest &requ
    int retrieveSize = args.value("retrieveSize").toInt();
    //   int startPointer = args.value("startPointer").toInt();
    QByteArray data = context->targetFile->read(retrieveSize);
-   ServiceInvokeResponse response("Common/Download/sendData", true);
+   ServiceInvokeResponse response("Common/DownloadServer/sendData", true);
    response.setDataItem("dataSize", data.size());
    response.setExtraData(data);
    response.setSerial(request.getSerial());
    return response;
 }
 
-ServiceInvokeResponse DownloadWrapper::notifyComplete(const ServiceInvokeRequest &request)
+ServiceInvokeResponse DownloadServerWrapper::notifyComplete(const ServiceInvokeRequest &request)
 {
-   
+   QSharedPointer<DownloadContext> context = getContextByRequest(request);
+   context->targetFile->close();
+   context->step = DOWNLOAD_STEP_FINISH;
+   clearState(request);
+   ServiceInvokeResponse response("Common/DownloadServer/notifyComplete", true);
+   response.setSerial(request.getSerial());
+   return response;
 }
 
-ServiceInvokeResponse DownloadWrapper::terminal(const ServiceInvokeRequest &request)
+ServiceInvokeResponse DownloadServerWrapper::terminal(const ServiceInvokeRequest &request)
 {
-   
+   clearState(request);
 }
 
-bool DownloadWrapper::hasContextByRequest(const ServiceInvokeRequest &request)
+void DownloadServerWrapper::clearState(const ServiceInvokeRequest &request)
+{
+   clearState(request.getSocketNum());
+}
+
+void DownloadServerWrapper::clearState(int sid)
+{
+   removeContextByRequestSocketId(sid);
+}
+
+bool DownloadServerWrapper::hasContextByRequest(const ServiceInvokeRequest &request)
 {
    return m_contextPool.contains(request.getSocketNum());
 }
 
-QSharedPointer<DownloadWrapper::DownloadContext> DownloadWrapper::getContextByRequest(const ServiceInvokeRequest &request)
+void DownloadServerWrapper::notifySocketDisconnect(QTcpSocket *socket)
 {
-   Q_ASSERT_X(m_contextPool.contains(request.getSocketNum()), "DownloadWrapper::getContextByRequest", "download context is not exist");
+   clearState(socket->socketDescriptor());
+}
+
+QSharedPointer<DownloadServerWrapper::DownloadContext> DownloadServerWrapper::getContextByRequest(const ServiceInvokeRequest &request)
+{
+   Q_ASSERT_X(m_contextPool.contains(request.getSocketNum()), "DownloadServerWrapper::getContextByRequest", "download context is not exist");
    return m_contextPool[request.getSocketNum()];
 }
 
-DownloadWrapper& DownloadWrapper::removeContextByRequestSocketId(int sid)
+DownloadServerWrapper& DownloadServerWrapper::removeContextByRequestSocketId(int sid)
 {
    if(m_contextPool.contains(sid)){
       QSharedPointer<DownloadContext> context = m_contextPool.value(sid);
       if(nullptr != context->targetFile){
          delete context->targetFile;
+         context->targetFile = nullptr;
       }
+      context.clear();
       m_contextPool.remove(sid);
    }
    return *this;
 }
 
-DownloadWrapper::~DownloadWrapper()
-{}
+DownloadServerWrapper::~DownloadServerWrapper()
+{
+   QMap<int, QSharedPointer<DownloadContext>>::const_iterator it = m_contextPool.cbegin();
+   while(it != m_contextPool.cend()){
+      QSharedPointer<DownloadContext> context;
+      if(!context.isNull()){
+         if(context->targetFile != nullptr){
+            delete context->targetFile;
+            context->targetFile = nullptr;
+         }
+         context.clear();
+      }
+   }
+}
 
 }//common
 }//ummservice
