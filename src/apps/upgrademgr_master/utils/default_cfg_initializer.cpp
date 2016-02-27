@@ -21,10 +21,10 @@ static void init_global_cfg(Settings& settings)
    settings.setValue("runtimeDir", runtimeDir, UMM_CFG_GROUP_GLOBAL);
    settings.setValue("listenPort", UMM_LISTEN_PORT, UMM_CFG_GROUP_GLOBAL);
    settings.setValue("baseDataDir", "/cntysoft/upgrademgr", UMM_CFG_GROUP_GLOBAL);
-   settings.setValue("dbHost", "localhost");
-   settings.setValue("dbUser", "cntysoft");
-   settings.setValue("dbPassword", "cntysoft");
-   settings.setValue("dbName", "upgrademgrmaster");
+   settings.setValue("dbHost", "localhost", UMM_CFG_GROUP_GLOBAL);
+   settings.setValue("dbUser", "cntysoft", UMM_CFG_GROUP_GLOBAL);
+   settings.setValue("dbPassword", "cntysoft", UMM_CFG_GROUP_GLOBAL);
+   settings.setValue("dbName", "upgrademgrmaster", UMM_CFG_GROUP_GLOBAL);
 }
 
 

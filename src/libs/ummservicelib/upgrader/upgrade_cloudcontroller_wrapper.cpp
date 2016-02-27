@@ -27,19 +27,24 @@ void init_upgrade_handler(const ServiceInvokeResponse &response, void* args)
    //需要判断对错
    UpgradeCloudControllerWrapper *self = static_cast<UpgradeCloudControllerWrapper*>(args);
    if(response.getStatus()){
-      self->m_context.response.setIsFinal(false);
-      self->m_context.response.setDataItem("msg", response.getDataItem("msg"));
-      self->writeInterResponse(self->m_context.request, self->m_context.response);
+      self->m_context->response.setIsFinal(false);
+      self->m_context->response.setDataItem("msg", response.getDataItem("msg"));
+      self->m_context->response.setDataItem("step", response.getDataItem("step"));
+      self->writeInterResponse(self->m_context->request, self->m_context->response);
+      if(response.getDataItem("step").toInt() == UpgradeCloudControllerWrapper::STEP_FINISH){
+         self->m_serviceInvoker->disconnectFromServer();
+         self->clearState();
+      }
    }else{
       //错误处理
-      self->m_context.response.setStatus(false);
-      self->m_context.response.setIsFinal(false);
-      self->m_context.response.setError(response.getError());
-      self->writeInterResponse(self->m_context.request, self->m_context.response);
-      self->m_isInAction = false;
-      self->m_eventLoop.exit(0);
-      self->m_context.response.setStatus(false);
-      self->m_context.response.setError({-1, "升级失败"});
+      self->m_context->response.setStatus(false);
+      self->m_context->response.setIsFinal(false);
+      self->m_context->response.setError(response.getError());
+      self->writeInterResponse(self->m_context->request, self->m_context->response);
+      self->m_context->response.setStatus(false);
+      self->m_context->response.setError({-1, "升级失败"});
+      self->clearState();
+      self->m_serviceInvoker->disconnectFromServer();
    }
 }
 
@@ -61,8 +66,9 @@ ServiceInvokeResponse UpgradeCloudControllerWrapper::upgrade(const ServiceInvoke
    m_isInAction = true;
    response.setSerial(request.getSerial());
    response.setIsFinal(false);
-   m_context.request = request;
-   m_context.response = response;
+   m_context.reset(new UpgradeContext);
+   m_context->request = request;
+   m_context->response = response;
    response.setDataItem("msg", "开始获取云控制器服务器地址");
    writeInterResponse(request, response);
    Info info;
@@ -87,7 +93,19 @@ ServiceInvokeResponse UpgradeCloudControllerWrapper::upgrade(const ServiceInvoke
    });
    invoker->connectToServer();
    m_eventLoop.exec();
-   return m_context.response;
+   response.setIsFinal(true);
+   response.setDataItem("msg", "");
+   return response;
+}
+
+void UpgradeCloudControllerWrapper::clearState()
+{
+   m_isInAction= false;
+   m_context.clear();
+   m_eventLoop.exit(0);
+   if(!m_serviceInvoker.isNull()){
+      m_serviceInvoker->disconnect();
+   }
 }
 
 //void UpgradeCloudControllerWrapper::notifySocketDisconnect(QWebSocket *socket)

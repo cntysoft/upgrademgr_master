@@ -2,6 +2,7 @@
 #define UMM_SERVICE_UPGRADE_CLOUDCONTROLLER_H
 
 #include <QString>
+#include <QSharedPointer>
 
 #include "ummservicelib/global_defs.h"
 #include "corelib/network/rpc/abstract_service.h"
@@ -25,15 +26,27 @@ public:
       QString fromVersion;
       QString toVersion;
    };
+   const static int STEP_PREPARE = -1;
+   const static int STEP_INIT_CONTEXT = 0;
+   const static int STEP_DOWNLOAD_PKG = 1;
+   const static int STEP_DOWNLOAD_COMPLETE = 2;
+   const static int STEP_EXTRA_PKG = 3;
+   const static int STEP_BACKUP_FILES = 4;
+   const static int STEP_UPGRADE_FILES = 5;
+   const static int STEP_BACKUP_DB = 6;
+   const static int STEP_RUN_UPGRADE_SCRIPT = 7;
+   const static int STEP_CLEANUP = 8;
+   const static int STEP_FINISH = 9;
 public:
    UpgradeCloudControllerWrapper(ServiceProvider& provider);
    Q_INVOKABLE ServiceInvokeResponse upgrade(const ServiceInvokeRequest &request);
-   
+protected:
+   void clearState();
 //protected:
 //   virtual void notifySocketDisconnect(QWebSocket *socket);
 protected:
    bool m_isInAction = false;
-   UpgradeContext m_context;
+   QSharedPointer<UpgradeContext> m_context;
 };
 
 }//upgrader
