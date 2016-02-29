@@ -2,6 +2,7 @@
 #include <QString>
 #include <QVariant>
 #include <QByteArray>
+#include <QDebug>
 
 #include "download_server.h"
 #include "ummlib/kernel/stddir.h"
@@ -86,7 +87,8 @@ ServiceInvokeResponse DownloadServerWrapper::sendData(const ServiceInvokeRequest
    const QMap<QString, QVariant> &args = request.getArgs();
    checkRequireFields(args, {"retrieveSize", "startPointer"});
    int retrieveSize = args.value("retrieveSize").toInt();
-   //   int startPointer = args.value("startPointer").toInt();
+   int startPointer = args.value("startPointer").toInt();
+   context->targetFile->seek(startPointer);
    QByteArray data = context->targetFile->read(retrieveSize);
    ServiceInvokeResponse response("Common/DownloadServer/sendData", true);
    response.setDataItem("dataSize", data.size());

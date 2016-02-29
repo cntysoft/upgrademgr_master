@@ -41,8 +41,6 @@ void init_upgrade_handler(const ServiceInvokeResponse &response, void* args)
       self->m_context->response.setIsFinal(false);
       self->m_context->response.setError(response.getError());
       self->writeInterResponse(self->m_context->request, self->m_context->response);
-      self->m_context->response.setStatus(false);
-      self->m_context->response.setError({-1, "升级失败"});
       self->clearState();
       self->m_serviceInvoker->disconnectFromServer();
    }
