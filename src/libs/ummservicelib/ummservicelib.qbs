@@ -21,7 +21,7 @@ Product
       }
       defines = defines.concat([
                                   'UMM_SERVICE_LIB_VERSION="'+ version+'"',
-                                  'UMM_MASTER_VERSION="' + project.upgrademgrMasterversion+'"'
+                                  'UMM_MASTER_VERSION="' + project.upgrademgrMasterVersion+'"'
                                ]);
       return defines;
    }
