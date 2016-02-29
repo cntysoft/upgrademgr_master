@@ -7,7 +7,6 @@ Product {
    Group {
       name: "assets"
       files : [
-           "assets/**/*",
            "upgrademgr_master.service",
        ]
       fileTags: ["asset files"]
