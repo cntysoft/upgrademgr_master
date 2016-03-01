@@ -12,10 +12,6 @@ using UpgrademgrMasterApplication = upgrademgr::master::Application;
 
 UpgrademgrMasterApplication* get_app_ref();
 
-QLatin1String get_upgrademgr_master_version();
-
-QString get_application_filepath();
-
 }//master
 }//upgrademgr
 

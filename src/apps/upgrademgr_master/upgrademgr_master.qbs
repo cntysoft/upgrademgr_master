@@ -14,9 +14,9 @@ UpgraderApplication
                                  ])
    cpp.defines: {
       var defines = [];
-      defines.push('UPGRADEMGR_MASTER_VERSION="' + project.upgrademgrMasterVersion + '"');
+      defines.push('UMM_VERSION="' + project.upgrademgrMasterVersion + '"');
       if(!project.releaseBuild){
-         defines.push("UPGRADEMGR_MASTER_DEBUG_BUILD")
+         defines.push("UMM_DEBUG_BUILD")
       }
       return defines;
    }

@@ -21,7 +21,7 @@ Product
       }
       defines = defines.concat([
                                   'UMM_SERVICE_LIB_VERSION="'+ version+'"',
-                                  'UMM_MASTER_VERSION="' + project.upgrademgrMasterVersion+'"'
+                                  'UMM_VERSION="' + project.upgrademgrMasterVersion+'"'
                                ]);
       return defines;
    }
@@ -56,6 +56,6 @@ Product
         "upgrader/upgrade_cloudcontroller.h",
         "upgrader/upgrade_cloudcontroller_wrapper.cpp",
         "upgrader/upgrade_upgrademgr_master.cpp",
-        "upgrader/upgrade_upgrademgr_master.h",
+        "upgrader/upgrade_upgrademgr_master_wrapper.h",
     ]
 }

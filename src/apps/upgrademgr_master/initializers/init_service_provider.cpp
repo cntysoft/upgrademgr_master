@@ -28,6 +28,9 @@ void init_service_provider()
    provider.addServiceToPool("Upgrader/UpgradeCloudController", [](ServiceProvider& provider)-> AbstractService*{
                             return new ummservice::upgrader::UpgradeCloudControllerWrapper(provider);
                          });
+   provider.addServiceToPool("Upgrader/UpgradeUpgradeMgrMaster", [](ServiceProvider& provider)-> AbstractService*{
+                            return new ummservice::upgrader::UpgradeUpgradeMgrMasterWrapper(provider);
+                         });
 }
 
 void cleanup_service_provider()

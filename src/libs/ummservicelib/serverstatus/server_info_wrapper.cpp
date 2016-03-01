@@ -1,7 +1,7 @@
 #include <QMap>
 #include <QString>
 #include <QVariant>
-
+#include <QDebug>
 #include "serverstatus/server_info.h"
 #include "ummlib/global/common_funcs.h"
 #include "ummlib/kernel/stddir.h"
@@ -23,6 +23,7 @@ ServiceInvokeResponse InfoWrapper::getVersionInfo(const ServiceInvokeRequest &re
 {
    ServiceInvokeResponse response("ServerStatus/Info/getVersionInfo", true);
    response.setSerial(request.getSerial());
+   Filesystem::filePutContents(QString("/cntysoft/version.txt"), ummlib::global::get_upgrademgr_master_version());
    response.setDataItem("version", ummlib::global::get_upgrademgr_master_version());
    response.setIsFinal(true);
    return response;

@@ -3,7 +3,7 @@
 
 //软件库管理接口
 #include "repo/repo_info.h"
-#include "upgrader/upgrade_upgrademgr_master.h"
+#include "upgrader/upgrade_upgrademgr_master_wrapper.h"
 //服务器自身信息
 #include "serverstatus/server_info.h"
 //通用服务接口

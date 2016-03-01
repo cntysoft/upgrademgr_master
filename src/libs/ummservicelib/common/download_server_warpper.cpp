@@ -111,6 +111,9 @@ ServiceInvokeResponse DownloadServerWrapper::notifyComplete(const ServiceInvokeR
 ServiceInvokeResponse DownloadServerWrapper::terminal(const ServiceInvokeRequest &request)
 {
    clearState(request);
+   ServiceInvokeResponse response("Common/DownloadServer/terminal", true);
+   response.setSerial(request.getSerial());
+   return response;
 }
 
 void DownloadServerWrapper::clearState(const ServiceInvokeRequest &request)
