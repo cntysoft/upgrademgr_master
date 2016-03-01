@@ -11,9 +11,9 @@
 #include "corelib/command/command_meta.h"
 #include "corelib/kernel/errorinfo.h"
 #include "corelib/kernel/settings.h"
-#include "ummlib/global/const.h"
+#include "corelib/network/web_service_server.h"
 #include "ummlib/network/multi_thread_server.h"
-#include "ummlib/network/web_service_server.h"
+#include "ummlib/global/const.h"
 
 namespace upgrademgr{
 namespace master{
@@ -24,7 +24,7 @@ using sn::corelib::ErrorInfo;
 using sn::corelib::Settings;
 
 using ummlib::network::MultiThreadServer;
-using ummlib::network::WebServiceServer;
+using sn::corelib::network::WebServiceServer;
 
 using upgrademgr::master::Application;
 using upgrademgr::master::get_app_ref;
@@ -51,10 +51,9 @@ void StartServerCommand::exec()
    MultiThreadServer *server = new MultiThreadServer(app);
    WebServiceServer *webServiceServer = new WebServiceServer(app, "websocketserver");
    ummlib::network::set_global_server(server);
-   ummlib::network::set_global_web_service_server(webServiceServer);
+   sn::corelib::network::set_global_web_service_server(webServiceServer);
    server->setHost(QHostAddress::Any);
    server->setPort(UMM_LISTEN_PORT);
-   
    webServiceServer->setHost(QHostAddress::Any);
    webServiceServer->setPort(UMM_LISTEN_PORT + 1);
    app.createPidFile();
@@ -66,7 +65,7 @@ void StartServerCommand::exec()
       if(nullptr != server){
          delete server;
       }
-      WebServiceServer *&webServiceServer = ummlib::network::get_global_web_service_server();
+      WebServiceServer *&webServiceServer = sn::corelib::network::get_global_web_service_server();
       if(nullptr != webServiceServer){
          delete webServiceServer;
       }
