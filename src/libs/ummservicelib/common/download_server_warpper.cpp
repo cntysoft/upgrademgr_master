@@ -30,10 +30,7 @@ DownloadServerWrapper::DownloadServerWrapper(ServiceProvider &provider)
 ServiceInvokeResponse DownloadServerWrapper::init(const ServiceInvokeRequest &request)
 {
    if(hasContextByRequest(request)){
-      QSharedPointer<DownloadContext> context = getContextByRequest(request);
-      if(context->step != DOWNLOAD_STEP_PREPARE){
-         throw_exception(ErrorInfo("状态错误"), getErrorContext());
-      }
+      throw_exception(ErrorInfo("状态错误"), getErrorContext());
    }
    QMap<QString, QVariant> args = request.getArgs();
    checkRequireFields(args, {"filename"});
@@ -79,10 +76,7 @@ ServiceInvokeResponse DownloadServerWrapper::sendData(const ServiceInvokeRequest
       }
    }
    if(!stateOk){
-      QSharedPointer<DownloadContext> context = getContextByRequest(request);
-      if(context->step != DOWNLOAD_STEP_PREPARE){
-         throw_exception(ErrorInfo("状态错误"), getErrorContext());
-      }
+      throw_exception(ErrorInfo("状态错误"), getErrorContext());
    }
    const QMap<QString, QVariant> &args = request.getArgs();
    checkRequireFields(args, {"retrieveSize", "startPointer"});
