@@ -6,7 +6,8 @@ UpgraderApplication
       name: "Qt"; 
       submodules: [
          "sql",
-         "websockets"
+         "websockets",
+         "qml"
       ]
    }
    cpp.includePaths: base.concat([
@@ -32,15 +33,13 @@ UpgraderApplication
       name: "command"
       prefix: name+"/"
       files:[
+           "cc_upgrade_test_command.cpp",
+           "cc_upgrade_test_command.h",
            "command_repo.h",
-           "global_help_command.cpp",
-           "global_help_command.h",
-           "global_version_command.cpp",
-           "global_version_command.h",
+           "global_command.cpp",
+           "global_command.h",
            "start_server_command.cpp",
            "start_server_command.h",
-           "webserver_env_software_comannd.cpp",
-           "webserver_env_software_comannd.h",
        ]
    }
    

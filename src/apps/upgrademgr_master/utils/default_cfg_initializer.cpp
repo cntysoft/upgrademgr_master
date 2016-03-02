@@ -22,9 +22,11 @@ static void init_global_cfg(Settings& settings)
    settings.setValue("listenPort", UMM_LISTEN_PORT, UMM_CFG_GROUP_GLOBAL);
    settings.setValue("baseDataDir", "/cntysoft/upgrademgr", UMM_CFG_GROUP_GLOBAL);
    settings.setValue("dbHost", "localhost", UMM_CFG_GROUP_GLOBAL);
-   settings.setValue("dbUser", "cntysoft", UMM_CFG_GROUP_GLOBAL);
+   settings.setValue("dbUser", "root", UMM_CFG_GROUP_GLOBAL);
    settings.setValue("dbPassword", "cntysoft", UMM_CFG_GROUP_GLOBAL);
    settings.setValue("dbName", "upgrademgrmaster", UMM_CFG_GROUP_GLOBAL);
+   settings.setValue("upgradeTestDbName", "cloudcontroller_upgrade", UMM_CFG_GROUP_GLOBAL);
+   settings.setValue("upgradeTestDir", "/srv/www/cloudcontrollerupgrade", UMM_CFG_GROUP_GLOBAL);
 }
 
 

@@ -19,9 +19,7 @@ using sn::corelib::AbstractCommandRunner;
 using upgrademgr::master::command::GlobalVersionCommand;
 using upgrademgr::master::command::GlobalHelpCommand;
 using upgrademgr::master::command::StartServerCommand;
-using upgrademgr::master::command::SetWebServerSoftwareItemCommand;
-using upgrademgr::master::command::DeleteWebServerSoftwareItemCommand;
-using upgrademgr::master::command::ListWebServerSoftwareItemCommand;
+using upgrademgr::master::command::CcUpgradeTestCommand;
 
 CommandRunner::CommandRunner(Application &app)
    : AbstractCommandRunner(app)
@@ -31,9 +29,7 @@ CommandRunner::CommandRunner(Application &app)
    addUsageText("--version  print main system version number\n");
    addUsageText("--help     print help document\n");
    addUsageText("start [--daemon] [--port] start upgrademgr server\n");
-   addUsageText("webserversoftware set <name> <version> 在指定的环境列表中添加一个软件\n");
-   addUsageText("webserversoftware delete <name> 在指定的环境列表中添加一个软件\n");
-   addUsageText("webserversoftware list 获取当前环境软件库列表\n");
+   addUsageText("ccupgradetest --script= test upgrade script\n");
    initCommandPool();
    initRouteItems();
 }
@@ -52,16 +48,8 @@ void CommandRunner::initCommandPool()
       StartServerCommand *cmd = new StartServerCommand(dynamic_cast<CommandRunner&>(runner), meta);
       return cmd;
    });
-   m_cmdRegisterPool.insert("Global_SetWebServerSoftwareItem", [](AbstractCommandRunner& runner, const CommandMeta& meta)->AbstractCommand*{
-      SetWebServerSoftwareItemCommand *cmd = new SetWebServerSoftwareItemCommand(dynamic_cast<CommandRunner&>(runner), meta);
-      return cmd;
-   });
-   m_cmdRegisterPool.insert("Global_DeleteWebServerSoftwareItem", [](AbstractCommandRunner& runner, const CommandMeta& meta)->AbstractCommand*{
-      DeleteWebServerSoftwareItemCommand *cmd = new DeleteWebServerSoftwareItemCommand(dynamic_cast<CommandRunner&>(runner), meta);
-      return cmd;
-   });
-   m_cmdRegisterPool.insert("Global_ListWebServerSoftwareItem", [](AbstractCommandRunner& runner, const CommandMeta& meta)->AbstractCommand*{
-      ListWebServerSoftwareItemCommand *cmd = new ListWebServerSoftwareItemCommand(dynamic_cast<CommandRunner&>(runner), meta);
+   m_cmdRegisterPool.insert("CC_UpgradeTest", [](AbstractCommandRunner& runner, const CommandMeta& meta)->AbstractCommand*{
+      CcUpgradeTestCommand *cmd = new CcUpgradeTestCommand(dynamic_cast<CommandRunner&>(runner), meta);
       return cmd;
    });
 }
@@ -80,17 +68,9 @@ void CommandRunner::initRouteItems()
                   {"category", "Global"},
                   {"name", "StartServer"}
                });
-   addCmdRoute("setwebserversoftware", "webserversoftware set <name> <version>", 1, {
-                  {"category", "Global"},
-                  {"name", "SetWebServerSoftwareItem"}
-               });
-   addCmdRoute("deletewebserversoftware", "webserversoftware delete <name>", 1, {
-                  {"category", "Global"},
-                  {"name", "DeleteWebServerSoftwareItem"}
-               });
-   addCmdRoute("listwebserversoftware", "webserversoftware list", 1, {
-                  {"category", "Global"},
-                  {"name", "ListWebServerSoftwareItem"}
+   addCmdRoute("ccupgradetest", "ccupgradetest --script= [--upgradedir=] [--upgradedb=]", 1, {
+                  {"category", "CC"},
+                  {"name", "UpgradeTest"}
                });
 }
 

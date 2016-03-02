@@ -1,5 +1,5 @@
-#ifndef UPGRADEMGR_MASTER_COMMAND_GLOBAL_HELP_COMMAND_H
-#define UPGRADEMGR_MASTER_COMMAND_GLOBAL_HELP_COMMAND_H
+#ifndef UMM_COMMAND_GLOBAL_COMMAND_H
+#define UMM_COMMAND_GLOBAL_COMMAND_H
 
 #include "corelib/command/abstract_command.h"
 
@@ -20,9 +20,18 @@ public:
    virtual ~GlobalHelpCommand();
 };
 
+
+class GlobalVersionCommand : public AbstractCommand 
+{
+public:
+   GlobalVersionCommand(AbstractCommandRunner& runner, const CommandMeta& invokeMeta);
+public:
+   virtual void exec();
+   virtual ~GlobalVersionCommand();
+};
+
 }//command
 }//master
 }//upgrademgr
 
-#endif // UPGRADEMGR_MASTER_COMMAND_GLOBAL_HELP_COMMAND_H
-
+#endif // UMM_COMMAND_GLOBAL_COMMAND_H
