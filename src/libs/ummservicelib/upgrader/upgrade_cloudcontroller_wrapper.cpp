@@ -22,7 +22,7 @@ using sn::corelib::network::ServiceInvoker;
 using sn::corelib::network::ServiceInvokeRequest;
 using ummservice::serverstatus::Info;
 
-void init_upgrade_handler(const ServiceInvokeResponse &response, void* args)
+void upgrade_cloudcontroller_handler(const ServiceInvokeResponse &response, void* args)
 {
    //需要判断对错
    UpgradeCloudControllerWrapper *self = static_cast<UpgradeCloudControllerWrapper*>(args);
@@ -48,7 +48,8 @@ void init_upgrade_handler(const ServiceInvokeResponse &response, void* args)
 
 UpgradeCloudControllerWrapper::UpgradeCloudControllerWrapper(ServiceProvider &provider)
    : AbstractService(provider)
-{}
+{
+}
 
 ServiceInvokeResponse UpgradeCloudControllerWrapper::upgrade(const ServiceInvokeRequest &request)
 {
@@ -82,7 +83,7 @@ ServiceInvokeResponse UpgradeCloudControllerWrapper::upgrade(const ServiceInvoke
       response.setDataItem("msg", "向upgrademgr_slave服务器发送升级请求");
       writeInterResponse(request, response);
       ServiceInvokeRequest serviceRequest("Upgrade/UpgradeCloudController", "upgrade", args);
-      invoker->request(serviceRequest, init_upgrade_handler, static_cast<void*>(this));
+      invoker->request(serviceRequest, upgrade_cloudcontroller_handler, static_cast<void*>(this));
    });
    connect(invoker.data(), &ServiceInvoker::connectErrorSignal, this, [&](const QString&){
       response.setDataItem("msg", QString("连接服务器失败 [%1:%2]").arg(meta.value("ip")).arg(UMS_LISTEN_PORT));
@@ -96,6 +97,16 @@ ServiceInvokeResponse UpgradeCloudControllerWrapper::upgrade(const ServiceInvoke
    return response;
 }
 
+void UpgradeCloudControllerWrapper::connectToServerHandler()
+{
+   
+}
+
+void UpgradeCloudControllerWrapper::connectToServerErrorHandler()
+{
+   
+}
+
 void UpgradeCloudControllerWrapper::clearState()
 {
    m_isInAction= false;
@@ -105,7 +116,6 @@ void UpgradeCloudControllerWrapper::clearState()
       m_serviceInvoker->disconnect();
    }
 }
-
 //void UpgradeCloudControllerWrapper::notifySocketDisconnect(QWebSocket *socket)
 //{
 

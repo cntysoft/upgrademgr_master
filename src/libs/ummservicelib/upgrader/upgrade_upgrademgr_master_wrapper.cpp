@@ -5,13 +5,12 @@
 #include <QVariant>
 #include <QStringList>
 
-#include "upgrade_upgrademgr_master_wrapper.h"
+#include "upgrade_upgrademgr_master.h"
 
 #include "corelib/io/filesystem.h"
 
 #include "ummlib/network/multi_thread_server.h"
 #include "ummlib/kernel/stddir.h"
-#include "ummlib/global/common_funcs.h"
 #include "ummlib/global/common_funcs.h"
 
 #include "corelib/kernel/application.h"
@@ -28,7 +27,7 @@ using sn::corelib::Application;
 
 const QString UpgradeUpgradeMgrMasterWrapper::RPM_FILENAME_TPL = "upgrademgr_master-%1-1.x86_64.rpm";
 
-UpgradeUpgradeMgrMasterWrapper::UpgradeUpgradeMgrMasterWrapper(sn::corelib::network::ServiceProvider &provider)
+UpgradeUpgradeMgrMasterWrapper::UpgradeUpgradeMgrMasterWrapper(ServiceProvider &provider)
    : AbstractService(provider),
      m_softwareRepoDir(StdDir::getSoftwareRepoDir())
 {

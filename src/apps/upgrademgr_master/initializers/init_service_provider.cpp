@@ -31,6 +31,9 @@ void init_service_provider()
    provider.addServiceToPool("Upgrader/UpgradeUpgradeMgrMaster", [](ServiceProvider& provider)-> AbstractService*{
                             return new ummservice::upgrader::UpgradeUpgradeMgrMasterWrapper(provider);
                          });
+   provider.addServiceToPool("Upgrader/UpgradeUpgradeMgrSlave", [](ServiceProvider& provider)-> AbstractService*{
+                            return new ummservice::upgrader::UpgradeUpgradeMgrSlaveWrapper(provider);
+                         });
 }
 
 void cleanup_service_provider()

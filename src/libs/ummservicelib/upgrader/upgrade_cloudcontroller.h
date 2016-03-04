@@ -17,7 +17,7 @@ UMM_USING_SERVICE_NAMESPACES
 class UMM_SERVICE_EXPORT UpgradeCloudControllerWrapper : public AbstractService
 {
    Q_OBJECT
-   friend void init_upgrade_handler(const ServiceInvokeResponse &response, void* args);
+   friend void upgrade_cloudcontroller_handler(const ServiceInvokeResponse &response, void* args);
 public:
    struct UpgradeContext
    {
@@ -42,6 +42,9 @@ public:
    Q_INVOKABLE ServiceInvokeResponse upgrade(const ServiceInvokeRequest &request);
 protected:
    void clearState();
+protected slots:
+   void connectToServerHandler();
+   void connectToServerErrorHandler();
 //protected:
 //   virtual void notifySocketDisconnect(QWebSocket *socket);
 protected:
