@@ -97,7 +97,7 @@ void UpgradeUpgradeMgrSlaveWrapper::connectToServerHandler()
    writeInterResponse(m_context->request, m_context->response);
    m_context->response.setDataItem("msg", "向upgrademgr_slave服务器发送升级请求");
    writeInterResponse(m_context->request, m_context->response);
-   ServiceInvokeRequest serviceRequest("Upgrade/UpgradeUpgradeMgrSlave", "upgrade", {{"targetVersion", m_context->targetVersion}});
+   ServiceInvokeRequest serviceRequest("Upgrader/UpgradeUpgradeMgrSlave", "upgrade", {{"targetVersion", m_context->targetVersion}});
    m_context->serviceInvoker->request(serviceRequest, upgrade_upgrademgr_slave_handler, static_cast<void*>(this));
 }
 
@@ -116,7 +116,8 @@ void UpgradeUpgradeMgrSlaveWrapper::clearState()
    m_context.clear();
    m_eventLoop.exit(0);
    if(!m_serviceInvoker.isNull()){
-      m_serviceInvoker->disconnect();
+      disconnect(m_serviceInvoker.data(), &ServiceInvoker::connectedToServerSignal, this, &UpgradeUpgradeMgrSlaveWrapper::connectToServerHandler);
+      disconnect(m_serviceInvoker.data(), &ServiceInvoker::connectErrorSignal, this, &UpgradeUpgradeMgrSlaveWrapper::connectToServerErrorHandler);
    }
 }
 

@@ -55,7 +55,7 @@ ServiceInvokeResponse UpgradeCloudControllerWrapper::upgrade(const ServiceInvoke
 {
    const QMap<QString, QVariant> &args = request.getArgs();
    checkRequireFields(args, {"fromVersion", "toVersion"});
-   ServiceInvokeResponse response("Upgrade/UpgradeCloudController/upgrade", true);
+   ServiceInvokeResponse response("Upgrader/UpgradeCloudController/upgrade", true);
    if(m_isInAction){
       response.setIsFinal(true);
       response.setStatus(false);
@@ -82,7 +82,7 @@ ServiceInvokeResponse UpgradeCloudControllerWrapper::upgrade(const ServiceInvoke
       writeInterResponse(request, response);
       response.setDataItem("msg", "向upgrademgr_slave服务器发送升级请求");
       writeInterResponse(request, response);
-      ServiceInvokeRequest serviceRequest("Upgrade/UpgradeCloudController", "upgrade", args);
+      ServiceInvokeRequest serviceRequest("Upgrader/UpgradeCloudController", "upgrade", args);
       invoker->request(serviceRequest, upgrade_cloudcontroller_handler, static_cast<void*>(this));
    });
    connect(invoker.data(), &ServiceInvoker::connectErrorSignal, this, [&](const QString&){
