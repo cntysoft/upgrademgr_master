@@ -11,7 +11,6 @@
 namespace ummservice{
 namespace upgrader{
 
-
 UMM_USING_SERVICE_NAMESPACES
 
 class UMM_SERVICE_EXPORT UpgradeMetaServerWrapper : public AbstractService

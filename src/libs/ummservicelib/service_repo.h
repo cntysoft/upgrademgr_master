@@ -15,6 +15,7 @@
 #include "upgrader/upgrade_upgrademgr_master.h"
 #include "upgrader/upgrade_upgrademgr_slave.h"
 #include "upgrader/upgrade_metaserver.h"
+#include "upgrader/upgrade_luoxi.h"
 
 #endif // UMM_SERVICE_SERVICE_REPO_H
 
