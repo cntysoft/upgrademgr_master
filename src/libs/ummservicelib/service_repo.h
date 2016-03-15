@@ -14,6 +14,7 @@
 #include "upgrader/upgrade_cloudcontroller.h"
 #include "upgrader/upgrade_upgrademgr_master.h"
 #include "upgrader/upgrade_upgrademgr_slave.h"
+#include "upgrader/upgrade_metaserver.h"
 
 #endif // UMM_SERVICE_SERVICE_REPO_H
 

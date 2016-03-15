@@ -55,6 +55,8 @@ Product
         "serverstatus/server_info.h",
         "upgrader/upgrade_cloudcontroller.h",
         "upgrader/upgrade_cloudcontroller_wrapper.cpp",
+        "upgrader/upgrade_metaserver.h",
+        "upgrader/upgrade_metaserver_wrapper.cpp",
         "upgrader/upgrade_upgrademgr_master.h",
         "upgrader/upgrade_upgrademgr_master_wrapper.cpp",
         "upgrader/upgrade_upgrademgr_slave.h",

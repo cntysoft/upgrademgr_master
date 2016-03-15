@@ -36,10 +36,10 @@ void upgrade_upgrademgr_slave_handler(const ServiceInvokeResponse &response, voi
       self->m_context->response.setDataItem("msg", response.getDataItem("msg"));
       self->m_context->response.setDataItem("step", response.getDataItem("step"));
       self->writeInterResponse(self->m_context->request, self->m_context->response);
-      if(response.getDataItem("step").toInt() == UpgradeCloudControllerWrapper::STEP_FINISH){
-         self->m_serviceInvoker->disconnectFromServer();
-         self->clearState();
-      }
+//      if(response.getDataItem("step").toInt() == UpgradeCloudControllerWrapper::STEP_FINISH){
+//         self->m_serviceInvoker->disconnectFromServer();
+//         self->clearState();
+//      }
    }else{
       //错误处理
       self->m_context->response.setStatus(false);
@@ -117,7 +117,7 @@ void UpgradeUpgradeMgrSlaveWrapper::clearState()
    if(!m_serviceInvoker.isNull()){
       disconnect(m_serviceInvoker.data(), &ServiceInvoker::connectedToServerSignal, this, &UpgradeUpgradeMgrSlaveWrapper::connectToServerHandler);
       disconnect(m_serviceInvoker.data(), &ServiceInvoker::connectErrorSignal, this, &UpgradeUpgradeMgrSlaveWrapper::connectToServerErrorHandler);
-      m_serviceInvoker->resetStatus();
+//      m_serviceInvoker->resetStatus();
    }
 }
 
