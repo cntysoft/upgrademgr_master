@@ -36,10 +36,10 @@ void upgrade_luoxi_handler(const ServiceInvokeResponse &response, void* args)
       self->m_context->response.setDataItem("msg", response.getDataItem("msg"));
       self->m_context->response.setDataItem("step", response.getDataItem("step"));
       self->writeInterResponse(self->m_context->request, self->m_context->response);
-//      if(response.getDataItem("step").toInt() == UpgradeCloudControllerWrapper::STEP_FINISH){
-//         self->m_serviceInvoker->disconnectFromServer();
-//         self->clearState();
-//      }
+      qDebug() << response.getDataItem("step").toInt();
+      if(response.getDataItem("step").toInt() == UpgradeLuoXiWrapper::STEP_FINISH){
+         self->clearState();
+      }
    }else{
       //错误处理
       self->m_context->response.setStatus(false);
@@ -59,6 +59,7 @@ UpgradeLuoXiWrapper::UpgradeLuoXiWrapper(sn::corelib::network::ServiceProvider &
 
 ServiceInvokeResponse UpgradeLuoXiWrapper::upgrade(const ServiceInvokeRequest& request)
 {
+   qDebug() << "xiuxiux";
    const QMap<QString, QVariant> &args = request.getArgs();
    checkRequireFields(args, {"targetVersion", "targetServerAddress"});
    ServiceInvokeResponse response("Upgrade/UpgradeLuoXi/upgrade", true);
@@ -117,7 +118,7 @@ void UpgradeLuoXiWrapper::clearState()
    if(!m_serviceInvoker.isNull()){
       disconnect(m_serviceInvoker.data(), &ServiceInvoker::connectedToServerSignal, this, &UpgradeLuoXiWrapper::connectToServerHandler);
       disconnect(m_serviceInvoker.data(), &ServiceInvoker::connectErrorSignal, this, &UpgradeLuoXiWrapper::connectToServerErrorHandler);
-//      m_serviceInvoker->resetStatus();
+      m_serviceInvoker->resetStatus();
    }
 }
 

@@ -21,6 +21,14 @@ class UMM_SERVICE_EXPORT UpgradeLuoXiWrapper : public AbstractService
 {
    Q_OBJECT
    friend void upgrade_luoxi_handler(const ServiceInvokeResponse &response, void* args);
+   const static int STEP_PREPARE = -1;
+   const static int STEP_INIT_CONTEXT = 0;
+   const static int STEP_DOWNLOAD_PKG = 1;
+   const static int STEP_DOWNLOAD_COMPLETE = 2;
+   const static int STEP_INSTALL_RPM = 3;
+   const static int STEP_RESTART_SERVER = 4;
+   const static int STEP_FINISH = 5;
+   const static int STEP_ERROR = 6;
    struct UpgradeContext
    {
       ServiceInvokeRequest request;
