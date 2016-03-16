@@ -42,6 +42,8 @@ Product
    files:[
         "common/download_server.h",
         "common/download_server_warpper.cpp",
+        "common/filesystem.h",
+        "common/filesystem_wrapper.cpp",
         "common/uploader_wrapper.cpp",
         "global_defs.h",
         "serverstatus/server_info.cpp",

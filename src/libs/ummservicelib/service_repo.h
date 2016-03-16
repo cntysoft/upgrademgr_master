@@ -9,7 +9,7 @@
 //通用服务接口
 #include "common/uploader.h"
 #include "common/download_server.h"
-
+#include "common/filesystem.h"
 //更新接口
 #include "upgrader/upgrade_cloudcontroller.h"
 #include "upgrader/upgrade_upgrademgr_master.h"

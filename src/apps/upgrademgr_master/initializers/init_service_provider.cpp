@@ -25,6 +25,9 @@ void init_service_provider()
    provider.addServiceToPool("Common/DownloadServer", [](ServiceProvider& provider)-> AbstractService*{
                             return new ummservice::common::DownloadServerWrapper(provider);
                          });
+   provider.addServiceToPool("Common/Filesystem", [](ServiceProvider& provider)-> AbstractService*{
+                            return new ummservice::common::FilesystemWrapper(provider);
+                         });
    provider.addServiceToPool("Upgrader/UpgradeCloudController", [](ServiceProvider& provider)-> AbstractService*{
                             return new ummservice::upgrader::UpgradeCloudControllerWrapper(provider);
                          });
