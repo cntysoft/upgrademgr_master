@@ -82,7 +82,7 @@ int UpgradeMetaServerWrapper::getMetaServerPid()
    QProcess process;
    QStringList args;
    args << "pidfilename";
-   process.start("meta_server", args);
+   process.start(MS_SBIN_NAME, args);
    process.waitForFinished(-1);
    if(0 != process.exitCode()){
       return -1;
