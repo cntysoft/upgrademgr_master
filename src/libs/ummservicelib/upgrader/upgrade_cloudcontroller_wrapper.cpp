@@ -65,6 +65,8 @@ ServiceInvokeResponse UpgradeCloudControllerWrapper::upgrade(const ServiceInvoke
    response.setSerial(request.getSerial());
    response.setIsFinal(false);
    m_context.reset(new UpgradeContext);
+   m_context->fromVersion = args.value("fromVersion").toString();
+   m_context->toVersion = args.value("toVersion").toString();
    m_context->request = request;
    m_context->response = response;
    response.setDataItem("msg", "开始获取云控制器服务器地址");
