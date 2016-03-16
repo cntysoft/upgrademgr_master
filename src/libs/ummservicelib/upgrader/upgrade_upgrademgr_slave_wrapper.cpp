@@ -117,7 +117,7 @@ void UpgradeUpgradeMgrSlaveWrapper::clearState()
    if(!m_serviceInvoker.isNull()){
       disconnect(m_serviceInvoker.data(), &ServiceInvoker::connectedToServerSignal, this, &UpgradeUpgradeMgrSlaveWrapper::connectToServerHandler);
       disconnect(m_serviceInvoker.data(), &ServiceInvoker::connectErrorSignal, this, &UpgradeUpgradeMgrSlaveWrapper::connectToServerErrorHandler);
-//      m_serviceInvoker->resetStatus();
+      m_serviceInvoker->resetStatus();
    }
 }
 

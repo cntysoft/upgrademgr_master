@@ -8,10 +8,12 @@
 #include "corelib/network/rpc/abstract_service.h"
 #include "corelib/network/rpc/invoke_meta.h"
 #include "corelib/network/rpc/service_provider.h"
+#include "corelib/network/rpc/service_invoker.h"
 
 namespace ummservice{
 namespace upgrader{
 
+using sn::corelib::network::ServiceInvoker;
 UMM_USING_SERVICE_NAMESPACES
 
 class UMM_SERVICE_EXPORT UpgradeCloudControllerWrapper : public AbstractService
@@ -25,6 +27,8 @@ public:
       ServiceInvokeResponse response;
       QString fromVersion;
       QString toVersion;
+      QString targetServerAddress;
+      QSharedPointer<ServiceInvoker> serviceInvoker;
    };
    const static int STEP_PREPARE = -1;
    const static int STEP_INIT_CONTEXT = 0;
