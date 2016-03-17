@@ -26,13 +26,21 @@ public:
 public:
    Q_INVOKABLE ServiceInvokeResponse ls(const ServiceInvokeRequest &request);
    Q_INVOKABLE ServiceInvokeResponse getStartDirPaths(const ServiceInvokeRequest &request);
+   Q_INVOKABLE ServiceInvokeResponse createDir(const ServiceInvokeRequest &request);
+   Q_INVOKABLE ServiceInvokeResponse deleteDir(const ServiceInvokeRequest &request);
+   Q_INVOKABLE ServiceInvokeResponse deleteDirs(const ServiceInvokeRequest &request);
+   Q_INVOKABLE ServiceInvokeResponse deleteFile(const ServiceInvokeRequest &request);
+   Q_INVOKABLE ServiceInvokeResponse deleteFiles(const ServiceInvokeRequest &request);
+   Q_INVOKABLE ServiceInvokeResponse rename(const ServiceInvokeRequest &request);
+   Q_INVOKABLE ServiceInvokeResponse cat(const ServiceInvokeRequest &request);
+   Q_INVOKABLE ServiceInvokeResponse save(const ServiceInvokeRequest &request);
+   Q_INVOKABLE ServiceInvokeResponse paste(const ServiceInvokeRequest &request);
 protected:
-   void checkFileOrPathIsAllowed();
+   void checkFileOrPathIsAllowed(const QString &path);
    bool isValidPath(const QString &path);
 protected:
    const QString m_baseDir; 
    static QStringList sm_allowPath;
-   static QStringList sm_protectedList;
 };
 
 }//common
