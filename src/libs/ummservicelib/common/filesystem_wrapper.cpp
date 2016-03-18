@@ -275,6 +275,7 @@ ServiceInvokeResponse FilesystemWrapper::paste(const ServiceInvokeRequest &reque
    }
    QString baseDir = StdDir::getBaseDataDir();
    target = baseDir + target;
+   target.replace("//", "/");
    if(!QFileInfo(target).isWritable()){
       response.setStatus(false);
       response.setError({-1, "目标文件夹不可写"});
@@ -286,9 +287,54 @@ ServiceInvokeResponse FilesystemWrapper::paste(const ServiceInvokeRequest &reque
             item.replace("//", "/");
             QString filename = item.mid(item.lastIndexOf("/") + 1);
             QString targetName = target + '/' + filename;
+            targetName = generateFilename(targetName);
+            QString source = baseDir + item;
+            QFileInfo sourceFileInfo(source);
+            if(!sourceFileInfo.exists()){
+               continue;
+            }
+            if(sourceFileInfo.isFile()){
+               Filesystem::copyFile(source, targetName);
+            }else if(sourceFileInfo.isDir()){
+               Filesystem::copyDir(source, target);
+            }
+         }
+      }
+   }else if("cut" == type){
+      for(QString item : items){
+         if(isValidPath(item)){
+            item.replace("//", "/");
+            QString source = baseDir + item;
+            QString filename = source.mid(source.lastIndexOf("/") + 1);
+            QString targetName = target + '/' + filename;
+            if(targetName == source){
+               continue;
+            }
+            targetName = generateFilename(targetName);
+            QFileInfo sourceFileInfo(source);
+            if(!sourceFileInfo.exists()){
+               continue;
+            }
+            if(sourceFileInfo.isFile()){
+               Filesystem::copyFile(source, targetName);
+               Filesystem::deleteFile(source);
+            }else if(sourceFileInfo.isDir()){
+               Filesystem::copyDir(source, target);
+               Filesystem::deleteDirRecusive(source);
+            }
          }
       }
    }
+   return response;
+}
+
+QString FilesystemWrapper::generateFilename(const QString &filename)
+{
+   QString generated = filename;
+   while(Filesystem::fileExist(generated)){
+      generated += ".copy";
+   }
+   return generated;
 }
 
 bool FilesystemWrapper::isValidPath(const QString &path)

@@ -38,6 +38,7 @@ public:
 protected:
    void checkFileOrPathIsAllowed(const QString &path);
    bool isValidPath(const QString &path);
+   QString generateFilename(const QString &filename);
 protected:
    const QString m_baseDir; 
    static QStringList sm_allowPath;
