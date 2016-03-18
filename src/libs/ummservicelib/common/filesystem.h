@@ -35,7 +35,10 @@ public:
    Q_INVOKABLE ServiceInvokeResponse cat(const ServiceInvokeRequest &request);
    Q_INVOKABLE ServiceInvokeResponse save(const ServiceInvokeRequest &request);
    Q_INVOKABLE ServiceInvokeResponse paste(const ServiceInvokeRequest &request);
+   Q_INVOKABLE ServiceInvokeResponse treeLs(const ServiceInvokeRequest &request);
 protected:
+   void doLsPath(QString path, QVariantList &entries);
+   void doGetStartDirPaths(QStringList paths, QVariantList &entries);
    void checkFileOrPathIsAllowed(const QString &path);
    bool isValidPath(const QString &path);
    QString generateFilename(const QString &filename);

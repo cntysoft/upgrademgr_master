@@ -44,6 +44,14 @@ ServiceInvokeResponse FilesystemWrapper::ls(const ServiceInvokeRequest &request)
       return response;
    }
    QVariantList entries;
+   doLsPath(path, entries);
+   ret.insert("entries", entries);
+   response.setExtraData(encodeJsonObject(QVariant(ret)));
+   return response;
+}
+
+void FilesystemWrapper::doLsPath(QString path, QVariantList &entries)
+{
    path = m_baseDir + path;
    QFileInfoList fileInfoList = Filesystem::ls(path);
    for(int i = 0; i < fileInfoList.size(); i++){
@@ -60,9 +68,6 @@ ServiceInvokeResponse FilesystemWrapper::ls(const ServiceInvokeRequest &request)
       item.insert("fullPath", fileInfo.absoluteFilePath().replace(StdDir::getBaseDataDir(), ""));
       entries.append(item);
    }
-   ret.insert("entries", entries);
-   response.setExtraData(encodeJsonObject(QVariant(ret)));
-   return response;
 }
 
 ServiceInvokeResponse FilesystemWrapper::getStartDirPaths(const ServiceInvokeRequest &request)
@@ -88,9 +93,17 @@ ServiceInvokeResponse FilesystemWrapper::getStartDirPaths(const ServiceInvokeReq
       return lsResponse;
    }
    //根据几个根目录生成一个列表 一定是文件夹
-   QString baseDir = StdDir::getBaseDataDir();
    QVariantList entries;
-   for(QString path : startPaths){
+   doGetStartDirPaths(startPaths, entries);
+   ret.insert("entries", entries);
+   response.setExtraData(encodeJsonObject(QVariant(ret)));
+   return response;
+}
+
+void FilesystemWrapper::doGetStartDirPaths(QStringList paths, QVariantList &entries)
+{
+   QString baseDir = StdDir::getBaseDataDir();
+   for(QString path : paths){
       if(isValidPath(path)){
          QString rpath = baseDir + path;
          QFileInfo fileInfo(rpath);
@@ -111,9 +124,6 @@ ServiceInvokeResponse FilesystemWrapper::getStartDirPaths(const ServiceInvokeReq
          entries.append(item);
       }
    }
-   ret.insert("entries", entries);
-   response.setExtraData(encodeJsonObject(QVariant(ret)));
-   return response;
 }
 
 ServiceInvokeResponse FilesystemWrapper::createDir(const ServiceInvokeRequest &request)
@@ -325,6 +335,37 @@ ServiceInvokeResponse FilesystemWrapper::paste(const ServiceInvokeRequest &reque
          }
       }
    }
+   return response;
+}
+
+ServiceInvokeResponse FilesystemWrapper::treeLs(const ServiceInvokeRequest &request)
+{
+   QMap<QString, QVariant> args = request.getArgs();
+   checkRequireFields(args, {"path"});
+   QString pathStr = args.value("path").toString();
+   QStringList paths = pathStr.split('|');
+   QVariantList data;
+   bool multiPath = false;
+   ServiceInvokeResponse response("Common/Filesystem/treeLs", true);
+   response.setSerial(request.getSerial());
+   response.setIsFinal(true);
+   if(1 == paths.size()){
+      doLsPath(pathStr, data);
+   }else{
+      doGetStartDirPaths(paths, data);
+      multiPath = true;
+   }
+   QVariantList ret;
+   for(int i = 0; i < data.size(); i++){
+      QMap<QString, QVariant> item = data[i].toMap();
+      if(item.value("type").toString() == "dir"){
+         QMap<QString, QVariant> treeItem;
+         treeItem.insert("id", !multiPath ? item.value("name") : pathStr + '/' + item.value("name").toString());
+         treeItem.insert("text", item.value("name"));
+         ret.append(treeItem);
+      }
+   }
+   response.setExtraData(encodeJsonObject(ret));
    return response;
 }
 
