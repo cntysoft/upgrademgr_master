@@ -36,7 +36,6 @@ void upgrade_luoxi_handler(const ServiceInvokeResponse &response, void* args)
       self->m_context->response.setDataItem("msg", response.getDataItem("msg"));
       self->m_context->response.setDataItem("step", response.getDataItem("step"));
       self->writeInterResponse(self->m_context->request, self->m_context->response);
-      qDebug() << response.getDataItem("step").toInt();
       if(response.getDataItem("step").toInt() == UpgradeLuoXiWrapper::STEP_FINISH){
          self->clearState();
       }
@@ -59,7 +58,6 @@ UpgradeLuoXiWrapper::UpgradeLuoXiWrapper(sn::corelib::network::ServiceProvider &
 
 ServiceInvokeResponse UpgradeLuoXiWrapper::upgrade(const ServiceInvokeRequest& request)
 {
-   qDebug() << "xiuxiux";
    const QMap<QString, QVariant> &args = request.getArgs();
    checkRequireFields(args, {"targetVersion", "targetServerAddress"});
    ServiceInvokeResponse response("Upgrade/UpgradeLuoXi/upgrade", true);
@@ -95,7 +93,7 @@ void UpgradeLuoXiWrapper::connectToServerHandler()
 {
    m_context->response.setDataItem("msg", QString("连接服务器成功 [%1:%2]").arg(m_context->targetServerAddress).arg(UMS_LISTEN_PORT));
    writeInterResponse(m_context->request, m_context->response);
-   m_context->response.setDataItem("msg", "向upgrademgr_slave服务器发送升级请求");
+   m_context->response.setDataItem("msg", "向upgrademgr_slave服务器发送操作请求");
    writeInterResponse(m_context->request, m_context->response);
    ServiceInvokeRequest serviceRequest("Upgrader/UpgradeLuoXi", "upgrade", {{"targetVersion", m_context->targetVersion}});
    m_context->serviceInvoker->request(serviceRequest, upgrade_luoxi_handler, static_cast<void*>(this));

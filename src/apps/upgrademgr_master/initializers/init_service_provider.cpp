@@ -15,8 +15,11 @@ void init_service_provider()
    provider.addServiceToPool("Repo/Info", [](ServiceProvider& provider)-> AbstractService*{
                             return new ummservice::repo::InfoWrapper(provider);
                          });
-   provider.addServiceToPool("ServerStatus/DeploySystemRuntime", [](ServiceProvider& provider)-> AbstractService*{
-                            return new ummservice::serverstatus::DeploySystemRuntimeWrapper(provider);
+   provider.addServiceToPool("ServerStatus/DeploySystemMetaServerRuntime", [](ServiceProvider& provider)-> AbstractService*{
+                            return new ummservice::serverstatus::DeploySystemMetaServerRuntimeWrapper(provider);
+                         });
+   provider.addServiceToPool("ServerStatus/DeploySystemLuoXiRuntime", [](ServiceProvider& provider)-> AbstractService*{
+                            return new ummservice::serverstatus::DeploySystemLuoXiRuntimeWrapper(provider);
                          });
    provider.addServiceToPool("ServerStatus/Info", [](ServiceProvider& provider)-> AbstractService*{
                             return new ummservice::serverstatus::InfoWrapper(provider);
