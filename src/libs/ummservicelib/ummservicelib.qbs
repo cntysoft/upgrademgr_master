@@ -39,31 +39,62 @@ Product
       qbs.install: true
       qbs.installDir: "lib"
    }
+   
+   Group {
+      name : "common"
+      prefix : name + "/"
+      files : [
+         "download_server.h",
+         "download_server_warpper.cpp",
+         "filesystem.h",
+         "filesystem_wrapper.cpp",
+         "uploader_wrapper.cpp",
+         "uploader.h"
+      ]
+   }
+
+   Group {
+      name : "repo"
+      prefix : name + "/"
+      files : [
+         "repo_info.cpp",
+         "repo_info.h"
+      ]
+   }
+   
+   Group {
+      name : "serverstatus"
+      prefix : name + "/"
+      files : [
+           "deploy_system_runtime.h",
+           "deploy_system_runtime_wrapper.cpp",
+           "server_info.cpp",
+           "server_info_wrapper.cpp",
+           "server_info.h",
+       ]
+   }
+   
+   Group {
+      name : "upgrader"
+      prefix : name + "/"
+      files : [
+         "upgrade_cloudcontroller.h",
+         "upgrade_cloudcontroller_wrapper.cpp",
+         "upgrade_luoxi.h",
+         "upgrade_luoxi_wrapper.cpp",
+         "upgrade_metaserver.h",
+         "upgrade_metaserver_wrapper.cpp",
+         "upgrade_upgrademgr_master.h",
+         "upgrade_upgrademgr_master_wrapper.cpp",
+         "upgrade_upgrademgr_slave.h",
+         "upgrade_upgrademgr_slave_wrapper.cpp",
+      ]
+   }
+
    files:[
-        "common/download_server.h",
-        "common/download_server_warpper.cpp",
-        "common/filesystem.h",
-        "common/filesystem_wrapper.cpp",
-        "common/uploader_wrapper.cpp",
         "global_defs.h",
-        "serverstatus/server_info.cpp",
-        "serverstatus/server_info_wrapper.cpp",
         "service_error_code.h",
         "service_repo.h",
-        "common/uploader.h",
-        "macros.h",
-        "repo/repo_info.cpp",
-        "repo/repo_info.h",
-        "serverstatus/server_info.h",
-        "upgrader/upgrade_cloudcontroller.h",
-        "upgrader/upgrade_cloudcontroller_wrapper.cpp",
-        "upgrader/upgrade_luoxi.h",
-        "upgrader/upgrade_luoxi_wrapper.cpp",
-        "upgrader/upgrade_metaserver.h",
-        "upgrader/upgrade_metaserver_wrapper.cpp",
-        "upgrader/upgrade_upgrademgr_master.h",
-        "upgrader/upgrade_upgrademgr_master_wrapper.cpp",
-        "upgrader/upgrade_upgrademgr_slave.h",
-        "upgrader/upgrade_upgrademgr_slave_wrapper.cpp",
+        "macros.h"
     ]
 }

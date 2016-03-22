@@ -6,6 +6,7 @@
 
 //服务器自身信息
 #include "serverstatus/server_info.h"
+#include "serverstatus/deploy_system_runtime.h"
 //通用服务接口
 #include "common/uploader.h"
 #include "common/download_server.h"

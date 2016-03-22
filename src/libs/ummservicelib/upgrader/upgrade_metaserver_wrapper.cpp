@@ -7,7 +7,7 @@
 #include <QVariant>
 #include <QStringList>
 #include <signal.h>
-#include <ummlib/global/const.h>
+#include "ummlib/global/const.h"
 
 #include "upgrade_upgrademgr_master.h"
 
