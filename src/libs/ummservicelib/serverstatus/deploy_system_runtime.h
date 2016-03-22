@@ -21,8 +21,12 @@ class UMM_SERVICE_EXPORT DeploySystemRuntimeWrapper : public AbstractService
 public:
    DeploySystemRuntimeWrapper(ServiceProvider& provider);
    Q_INVOKABLE ServiceInvokeResponse startMetaServer(const ServiceInvokeRequest &request);
+   Q_INVOKABLE ServiceInvokeResponse stopMetaServer(const ServiceInvokeRequest &request);
+   Q_INVOKABLE ServiceInvokeResponse restartMetaServer(const ServiceInvokeRequest &request);
 protected:
    int getMetaServerPid();
+protected:
+   QString m_metaServerPidFilename;
 };
 
 }//serverstatus
