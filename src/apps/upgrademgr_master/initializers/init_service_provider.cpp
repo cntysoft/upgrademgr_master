@@ -13,41 +13,44 @@ void init_service_provider()
 {
    ServiceProvider& provider = ServiceProvider::instance();
    provider.addServiceToPool("Repo/Info", [](ServiceProvider& provider)-> AbstractService*{
-                            return new ummservice::repo::InfoWrapper(provider);
-                         });
+      return new ummservice::repo::InfoWrapper(provider);
+   });
    provider.addServiceToPool("ServerStatus/DeploySystemMetaServerRuntime", [](ServiceProvider& provider)-> AbstractService*{
-                            return new ummservice::serverstatus::DeploySystemMetaServerRuntimeWrapper(provider);
-                         });
+      return new ummservice::serverstatus::DeploySystemMetaServerRuntimeWrapper(provider);
+   });
    provider.addServiceToPool("ServerStatus/DeploySystemLuoXiRuntime", [](ServiceProvider& provider)-> AbstractService*{
-                            return new ummservice::serverstatus::DeploySystemLuoXiRuntimeWrapper(provider);
-                         });
+      return new ummservice::serverstatus::DeploySystemLuoXiRuntimeWrapper(provider);
+   });
+   provider.addServiceToPool("ServerStatus/UpgradeMgrSlaveServerInfo", [](ServiceProvider& provider)-> AbstractService*{
+      return new ummservice::serverstatus::UpgradeMgrSlaveServerInfoWrapper(provider);
+   });
    provider.addServiceToPool("ServerStatus/Info", [](ServiceProvider& provider)-> AbstractService*{
-                            return new ummservice::serverstatus::InfoWrapper(provider);
-                         });
+      return new ummservice::serverstatus::InfoWrapper(provider);
+   });
    provider.addServiceToPool("Common/Uploader", [](ServiceProvider& provider)-> AbstractService*{
-                            return new ummservice::common::UploaderWrapper(provider);
-                         });
+      return new ummservice::common::UploaderWrapper(provider);
+   });
    provider.addServiceToPool("Common/DownloadServer", [](ServiceProvider& provider)-> AbstractService*{
-                            return new ummservice::common::DownloadServerWrapper(provider);
-                         });
+      return new ummservice::common::DownloadServerWrapper(provider);
+   });
    provider.addServiceToPool("Common/Filesystem", [](ServiceProvider& provider)-> AbstractService*{
-                            return new ummservice::common::FilesystemWrapper(provider);
-                         });
+      return new ummservice::common::FilesystemWrapper(provider);
+   });
    provider.addServiceToPool("Upgrader/UpgradeCloudController", [](ServiceProvider& provider)-> AbstractService*{
-                            return new ummservice::upgrader::UpgradeCloudControllerWrapper(provider);
-                         });
+      return new ummservice::upgrader::UpgradeCloudControllerWrapper(provider);
+   });
    provider.addServiceToPool("Upgrader/UpgradeUpgradeMgrMaster", [](ServiceProvider& provider)-> AbstractService*{
-                            return new ummservice::upgrader::UpgradeUpgradeMgrMasterWrapper(provider);
-                         });
+      return new ummservice::upgrader::UpgradeUpgradeMgrMasterWrapper(provider);
+   });
    provider.addServiceToPool("Upgrader/UpgradeUpgradeMgrSlave", [](ServiceProvider& provider)-> AbstractService*{
-                            return new ummservice::upgrader::UpgradeUpgradeMgrSlaveWrapper(provider);
-                         });
+      return new ummservice::upgrader::UpgradeUpgradeMgrSlaveWrapper(provider);
+   });
    provider.addServiceToPool("Upgrader/UpgradeMetaServer", [](ServiceProvider& provider)-> AbstractService*{
-                            return new ummservice::upgrader::UpgradeMetaServerWrapper(provider);
-                         });
+      return new ummservice::upgrader::UpgradeMetaServerWrapper(provider);
+   });
    provider.addServiceToPool("Upgrader/UpgradeLuoXi", [](ServiceProvider& provider)-> AbstractService*{
-                            return new ummservice::upgrader::UpgradeLuoXiWrapper(provider);
-                         });
+      return new ummservice::upgrader::UpgradeLuoXiWrapper(provider);
+   });
 }
 
 void cleanup_service_provider()

@@ -71,6 +71,8 @@ Product
            "server_info.cpp",
            "server_info_wrapper.cpp",
            "server_info.h",
+           "upgrademgr_slave_server_info.h",
+           "upgrademgr_slave_server_info_wrapper.cpp",
        ]
    }
    
