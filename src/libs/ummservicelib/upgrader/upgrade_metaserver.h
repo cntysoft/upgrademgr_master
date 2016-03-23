@@ -25,6 +25,7 @@ protected:
    int getMetaServerPid();
 protected:
    const QString m_softwareRepoDir;
+   QString m_pidFilename;
 };
 
 }//upgrader

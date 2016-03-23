@@ -1,12 +1,12 @@
 #include "upgrade_metaserver.h"
 
-#include <QDebug>
 #include <QProcess>
 #include <QDir>
 #include <QList>
 #include <QVariant>
 #include <QStringList>
 #include <signal.h>
+#include <QThread>
 #include "ummlib/global/const.h"
 
 #include "upgrade_upgrademgr_master.h"
@@ -68,6 +68,9 @@ ServiceInvokeResponse UpgradeMetaServerWrapper::upgrade(const ServiceInvokeReque
    if(pid != -1){
       kill(pid, SIGINT);
    }
+   while(Filesystem::fileExist(m_pidFilename)){
+      QThread::msleep(100);
+   }
    if(!QProcess::startDetached(MS_SBIN_NAME, {"start"})){
       response.setStatus(false);
       response.setError({1, "重启服务器失败, 升级失败"});
@@ -79,19 +82,21 @@ ServiceInvokeResponse UpgradeMetaServerWrapper::upgrade(const ServiceInvokeReque
 
 int UpgradeMetaServerWrapper::getMetaServerPid()
 {
-   QProcess process;
-   QStringList args;
-   args << "pidfilename";
-   process.start(MS_SBIN_NAME, args);
-   process.waitForFinished(-1);
-   if(0 != process.exitCode()){
+   if(m_pidFilename.isEmpty()){
+      QProcess process;
+      QStringList args;
+      args << "pidfilename";
+      process.start(MS_SBIN_NAME, args);
+      process.waitForFinished(-1);
+      if(0 != process.exitCode()){
+         return -1;
+      }
+      m_pidFilename = process.readAllStandardOutput();
+   }
+   if(!Filesystem::fileExist(m_pidFilename)){
       return -1;
    }
-   QString pidFilename = process.readAllStandardOutput();
-   if(!Filesystem::fileExist(pidFilename)){
-      return -1;
-   }
-   return Filesystem::fileGetContents(pidFilename).toInt();
+   return Filesystem::fileGetContents(m_pidFilename).toInt();
 }
 
 bool UpgradeMetaServerWrapper::installRpmPackage(const QString &filename, QString &errorString)
